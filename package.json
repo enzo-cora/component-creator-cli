@@ -1,0 +1,20 @@
+{
+  "name": "component-architect",
+  "version": "1.0.0",
+  "description": "Define and generate automatically your own custom component from CLI (like the angular CLI)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enzo-cora/component-architect.git"
+  },
+  "author": "enzo coratella",
+  "keywords": ["component","creator","generator","cli","ddd","MVC"],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/enzo-cora/component-architect/issues"
+  },
+  "homepage": "https://github.com/enzo-cora/component-architect#readme"
+}
