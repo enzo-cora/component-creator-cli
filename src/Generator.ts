@@ -1,8 +1,7 @@
-import {createComponent} from "./component";
 import {getSrcDir} from "./getSrcDir";
 import * as fs from "fs";
-import {wrkDir} from "./config";
-import {ComponentDispatcherInstance, IComponentDispatcher} from "./ComponentDispatcher";
+import {ComponentArchitect, IComponentDispatcher} from "./ComponentDispatcher";
+import {argPosition} from "./config";
 
 enum CommandTypeEnum {
   create = "create",
@@ -16,13 +15,6 @@ interface IGenerator {
   componentName: string
   componentType : string
   execute() : void
-}
-
-const argPosition = {
-  subdomain:2,
-  componentType: 2,
-  cmd: 3,
-  componentName:4
 }
 
 export class Generator implements IGenerator{
@@ -123,17 +115,5 @@ export class Generator implements IGenerator{
       else
         return  Promise.reject(`Le domaine "${wrkDir}" n'existe pas`)
     }
-
-
-
   }
-
-
-
 }
-
-Generator.build(ComponentDispatcherInstance)
-  .then(generator=>generator.execute())
-  .catch(err=> {
-    console.log(`Une erreur est survenue: `,err)
-  })

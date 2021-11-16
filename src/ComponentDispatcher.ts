@@ -8,19 +8,19 @@ export interface IComponentDispatcher{
   components : string[]
 }
 
-class ComponentDispatcher implements IComponentDispatcher{
+export class ComponentDispatcher implements IComponentDispatcher{
 
   private MapPathAndComponent: Map<string, Path > = new Map()
   private MapHandlerAndComponent: Map<string, handler> = new Map()
 
-  addComponent(componentName , path, handler) : string | true {
-    if(this.MapPathAndComponent.has(componentName))
+  addComponent(componentType , path, handler) : string | true {
+    if(this.MapPathAndComponent.has(componentType))
       return "Ce composant existe deja"
     else if([...this.MapPathAndComponent.values()].includes(path))
       return "Ce path est déjà utilisé pour un autre composant"
     else{
-      this.MapPathAndComponent.set(componentName,path)
-      this.MapHandlerAndComponent.set(componentName,handler)
+      this.MapPathAndComponent.set(componentType,path)
+      this.MapHandlerAndComponent.set(componentType,handler)
       return true
     }
   }
@@ -43,5 +43,3 @@ class ComponentDispatcher implements IComponentDispatcher{
   }
 
 }
-
-export const ComponentDispatcherInstance = new ComponentDispatcher()

@@ -1,28 +1,18 @@
-import {ComponentDispatcherInstance} from "./ComponentDispatcher";
+import fs from "fs"
+import path from "path";
+import {IGlogalConfigFile} from "./_definitions/IGlogalConfigFile";
 
-type NamingConvention = 'camelCase' | "PascalCase" | "snake_case" | "kebab-case"
-
-interface File{
-  name : string
-  prefix: string,
-  sufixe : string,
-  extension : string
-  preExtention : string
-  namingConvention : NamingConvention
+export const argPosition = {
+  subdomain:2,
+  componentType: 2,
+  cmd: 3,
+  componentName:4
 }
-interface Directory{
-  name : string
-  prefix: string,
-  sufixe : string,
-  namingConvention : NamingConvention
-}
+export const keywordReplacement = "[CamelCase]"
+export const nameConfigDir = "component-architect-config"
+export const nameGlobalConfigFile = "config-global.json"
+export const nameComponentConfigFile = "config-component.json"
+export const separator = "@"
 
-interface Handler {
-  firectory : Directory
-  files : File[]
-}
-
-export const wrkDir : string =  "src/core"
-
-ComponentDispatcherInstance.addComponent('uc','application/use-cases')
-ComponentDispatcherInstance.addComponent('entity','domain/entities')
+const globalConfigFile : IGlogalConfigFile = JSON.parse(fs.readFileSync(path.resolve(`${nameConfigDir}/${nameGlobalConfigFile}`)).toString())
+export const globalWorkDir  = path.resolve(globalConfigFile.globalWorkDir)

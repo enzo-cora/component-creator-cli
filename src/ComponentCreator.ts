@@ -1,6 +1,13 @@
 import * as fs from "fs";
+import {IComponentReader} from "./ComponentReader";
 
-export const createComponent = async (path,name,componentType)=> {
+type IComponentCreator = (path:string, replaceName:string, componentReader:IComponentReader) => void
+
+export const createComponent : IComponentCreator = async (
+  path,
+  name,
+  componentType
+)=> {
 
 
   if(componentType)
@@ -34,5 +41,4 @@ export const createComponent = async (path,name,componentType)=> {
    console.log("Une erreur c'est produite: ",err)
  }
 }
-
 
