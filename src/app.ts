@@ -1,39 +1,23 @@
-import {ComponentDispatcher} from "./ComponentDispatcher";
-import {ComponentReader} from "./ComponentReader";
-import {CLIHandler} from "./CLIHandler";
+import {Command} from "commander";
+import {initialize} from "./commands/initialize";
+import {create} from "./commands/create";
+import Conf from "conf";
 
 
-const CompDispatcher = new ComponentDispatcher()
+const store = new Conf();
+const program = new Command();
 
-const run = async ()=>{
+program.version('0.0.1');
+program
+  .command('init')
+  .description(`If config file does not exist : Create configs files and 1 example modele \n 
+  Else if configs files alrady exist : check their validity, and save configuration`)
+  .action(initialize)
 
-  const dirsInfos = await ComponentReader.getAllDirsInfos()
-
-  for(const dirInfo of dirsInfos){
-    const CompReader = new ComponentReader(dirInfo)
-    const addResult = CompDispatcher.addComponent(CompReader)
-    if(addResult instanceof Error)
-      return Promise.reject(addResult.message)
-  }
-
-  const CLIResult = CLIHandler.build(CompDispatcher)
-  if(CLIResult instanceof Error)
-    return Promise.reject(CLIResult.message)
-
-
-  const componentType = CLIResult.componentType
-  const compReaderResult = CompDispatcher.getComponentReader(componentType)
-  if(compReaderResult instanceof Error)
-    return Promise.reject(compReaderResult.message)
-
-  const executionResult = CLIResult.execute(compReaderResult)
-  if (executionResult instanceof Error)
-    return Promise.reject(executionResult.message)
-
-}
-
-run()
-  .then(()=> console.log("Le composant à été créer avec succès"))
-  .catch(err=> {
-    console.log(err)
-  })
+program
+  .command('create')
+  .argument('<templateName>',"Template to use")
+  .argument('<replacementName>',"Replacement word")
+  .description(`Crée un composant`)
+  .action(create)
+  .parseAsync(process.argv).then()

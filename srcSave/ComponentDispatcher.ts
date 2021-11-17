@@ -1,19 +1,20 @@
-import {ITemplateReader} from "./TemplateReader";
+import {IComponentReader} from "./ComponentReader";
 
 type Path = string
 
 export interface IComponentDispatcher{
   componentTypes : string[]
-  addComponent(compReader:ITemplateReader) : Error | void
-  getComponentReader(componentName) : Error | ITemplateReader
+  addComponent(compReader:IComponentReader) : Error | void
+  getComponentReader(componentName) : Error | IComponentReader
 }
 
 export class ComponentDispatcher implements IComponentDispatcher{
 
-  private MapHandlerAndComponent: Map<string, ITemplateReader> = new Map()
+  private MapHandlerAndComponent: Map<string, IComponentReader> = new Map()
 
-  addComponent( compReader : ITemplateReader ) : Error | void {
-    const componentTypeResult = compReader.getTemplateName()
+
+  addComponent( compReader : IComponentReader ) : Error | void {
+    const componentTypeResult = compReader.getComponentType()
     if(componentTypeResult instanceof Error)
       return componentTypeResult
     if(this.MapHandlerAndComponent.has(componentTypeResult))
@@ -27,7 +28,7 @@ export class ComponentDispatcher implements IComponentDispatcher{
 
   }
 
-  getComponentReader(componentType) : Error | ITemplateReader {
+  getComponentReader(componentType) : Error | IComponentReader {
     const compReader = this.MapHandlerAndComponent.get(componentType)
     if(compReader)
       return compReader

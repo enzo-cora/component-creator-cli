@@ -52,7 +52,7 @@ export class CLIHandler implements IGenerator{
     }
   }
 
-  static build(componentDispatcher : IComponentDispatcher) : IGenerator | Error {
+  static build(componentTypes : string[]) : IGenerator | Error {
     const argLenght = process.argv.length
     const index = (i)=> argLenght === 6 ? i+1 : i
 
@@ -67,7 +67,7 @@ export class CLIHandler implements IGenerator{
     const cmdResult = this.getCommand(index(argPosition.cmd))
     const componentTypeResult = this.getComponentType(
       index(argPosition.componentType),
-      componentDispatcher.componentTypes
+      componentTypes
     )
     const componantSubdomainPathResult = this.getComponentSubDomainPath(argLenght)
     const componentNameResult = this.getReplacementName(index(argPosition.componentName))

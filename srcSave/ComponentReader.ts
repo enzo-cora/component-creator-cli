@@ -1,8 +1,8 @@
-import {readdir} from "fs/promises";
+import fs, {readdirSync} from "fs";
 import path from "path";
 import {separator, nameComponentConfigFile, nameConfigDir, nameGlobalConfigFile, keywordReplacement} from "./_config";
 import {IComponentConfigFile} from "./_definitions/IComponentConfigFile";
-import fs, {readdirSync} from "fs";
+import {readdir} from "fs/promises";
 
 export interface IComponentReader {
   componentWorkDirPath: string
@@ -41,21 +41,30 @@ export class ComponentReader implements IComponentReader{
     else
       this.componentWorkDirPath = configFileResult.componentWorkDir
 
-    this.rawFilesInfos = this.getAllFilesInfos()
+    this.rawFilesInfos = this.getAllRawFilesInfos()
   }
 
-  static async getAllDirsInfos() : Promise<DirInfos[]> {
-    const globalDirConfigPath = path.resolve(nameConfigDir)
-    const result = await readdir(globalDirConfigPath, { withFileTypes: true })
-    return  result
-      .filter(dirent => dirent.isDirectory())
-      .map(dirent => ( {dirName : dirent.name, dirPath :`${globalDirConfigPath}/${dirent.name}`} ))
+  static async getAllRawDirsInfos() : Promise<DirInfos[] | Error> {
+    try {
+      const globalDirConfigPath = path.resolve(nameConfigDir)
+      if(!fs.existsSync(globalDirConfigPath))
+        return new Error(`Problème ! Le répertoire global de configuration est manquant !`)
+
+      const result = await readdir(globalDirConfigPath, { withFileTypes: true })
+      return  result
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => ( {dirName : dirent.name, dirPath :`${globalDirConfigPath}/${dirent.name}`} ))
+    }
+    catch (err){
+      return new Error(`Une erreur s'est produite : ${err}`)
+    }
   }
 
-  private getAllFilesInfos() : rawFileInfo[] {
+  private getAllRawFilesInfos() : rawFileInfo[] {
+
     const dirPath = this.dirInfo.dirPath
-    const result = readdirSync(dirPath, { withFileTypes: true })
-    return  result
+    const readDirResult = readdirSync(dirPath, { withFileTypes: true })
+    return  readDirResult
       .filter(file => file.isFile() && file.name !== nameComponentConfigFile)
       .map(file => ({
         fileName : file.name,
