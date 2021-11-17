@@ -1,15 +1,16 @@
 import {readdir} from "fs/promises";
 import path from "path";
-import {separator, nameComponentConfigFile, nameConfigDir, nameGlobalConfigFile, keywordReplacement} from "./config";
+import {separator, nameComponentConfigFile, nameConfigDir, nameGlobalConfigFile, keywordReplacement} from "./_config";
 import {IComponentConfigFile} from "./_definitions/IComponentConfigFile";
 import fs, {readdirSync} from "fs";
 
 export interface IComponentReader {
-  getComponentType() : string | Error
-  getConfigFile () : IComponentConfigFile | void
+  componentWorkDirPath: string
+  rawFilesInfos : rawFileInfo[]
+  getComponentType(): string | Error
   getTransformedDirName (replaceValue : string) : string | Error
   getTransformedFilesNames(replaceValue : string) : string[] | Error
-  getTransformeedFileContent(replaceValue : string)
+  // getTransformedFilesContents(replaceValue : string) : string | Error
 }
 
 export type DirInfos = {
@@ -17,7 +18,7 @@ export type DirInfos = {
   dirPath : string
 }
 
-export type FileInfos = {
+export type rawFileInfo = {
   fileName : string,
   filePath : string
 }
@@ -27,23 +28,31 @@ const regexDirectory =  new RegExp(`(^[\\w]+)${separator}([\\S]+)`)
 export class ComponentReader implements IComponentReader{
 
 
-  filesInfos : FileInfos[]
+  rawFilesInfos : rawFileInfo[]
+  componentWorkDirPath : string
 
   constructor(
     public dirInfo : DirInfos,
   ) {
-   this.filesInfos = this.getAllFilesInfos()
+
+    const configFileResult = this.getConfigFile()
+    if(!configFileResult)
+      this.componentWorkDirPath = ""
+    else
+      this.componentWorkDirPath = configFileResult.componentWorkDir
+
+    this.rawFilesInfos = this.getAllFilesInfos()
   }
 
   static async getAllDirsInfos() : Promise<DirInfos[]> {
-    const configDirPath = path.resolve(nameConfigDir)
-    const result = await readdir(configDirPath, { withFileTypes: true })
+    const globalDirConfigPath = path.resolve(nameConfigDir)
+    const result = await readdir(globalDirConfigPath, { withFileTypes: true })
     return  result
       .filter(dirent => dirent.isDirectory())
-      .map(dirent => ( {dirName : dirent.name, dirPath :`${configDirPath}/${dirent.name}`} ))
+      .map(dirent => ( {dirName : dirent.name, dirPath :`${globalDirConfigPath}/${dirent.name}`} ))
   }
 
-  private getAllFilesInfos() : FileInfos[] {
+  private getAllFilesInfos() : rawFileInfo[] {
     const dirPath = this.dirInfo.dirPath
     const result = readdirSync(dirPath, { withFileTypes: true })
     return  result
@@ -54,42 +63,40 @@ export class ComponentReader implements IComponentReader{
       }))
   }
 
-  getConfigFile() : IComponentConfigFile | void {
+  private getConfigFile() : IComponentConfigFile | null {
     const dirPath = this.dirInfo.dirPath
     if(fs.existsSync(`${dirPath}/${nameComponentConfigFile}`)){
       const result = fs.readFileSync(path.resolve(`${dirPath}/${nameComponentConfigFile}`))
       return JSON.parse(result.toString()) as IComponentConfigFile
     }
     else
-      console.log(`Aucun fichier de configuration doit être fourni avec le composant ${this.dirInfo.dirName}`)
-    return
+      console.log(`Infos : Aucun fichier de configuration n'as été fourni avec le composant ${this.dirInfo.dirName}`)
+    return null
   }
 
   getComponentType() : string | Error {
     const dirName = this.dirInfo.dirName
     const componentType = regexDirectory.exec(dirName)
-    if( !componentType || !componentType[1] ){
+    if( !componentType || !componentType[1] )
       return new Error(`Vous devez donner un type à votre composant. Ecrivez-le dans le nom du dossier DEVANT le séparateur suivant "${separator}" `)
-    }else
-      return componentType[1]
+    return componentType[1]
   }
 
   getTransformedDirName(replaceValue : string) : string | Error {
     const dirName = this.dirInfo.dirName
     const componentName = regexDirectory.exec(dirName)
-    if(!componentName || !componentName[2]){
+    if(!componentName || !componentName[2])
       return new Error("Le nom du dossier modèle doit contenir le Format du future Nom ! (ex: TypeOfComponent:CamelCaseDir ) ")
-    }else
-      return componentName[2].replace(keywordReplacement, replaceValue)
+    return componentName[2].replace(keywordReplacement, replaceValue)
   }
 
-  getTransformedFilesNames (replaceValue : string){
-    return this.filesInfos.map(fileInfo =>
+  getTransformedFilesNames (replaceValue : string):  string[] | Error {
+    return this.rawFilesInfos.map(fileInfo =>
       fileInfo.fileName.replace(keywordReplacement, replaceValue)
     )
   }
 
-  getTransformeedFileContent(replaceValue){}
+  getTransformedFilesContents(replaceValue){}
 
 }
 

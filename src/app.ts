@@ -1,47 +1,37 @@
-import {Generator} from "./Generator";
 import {ComponentDispatcher} from "./ComponentDispatcher";
-import {ComponentReader, DirInfos} from "./ComponentReader";
-import {constants} from "os";
+import {ComponentReader} from "./ComponentReader";
+import {CLIHandler} from "./CLIHandler";
 
 
-const ComponentArchitect = new ComponentDispatcher()
+const CompDispatcher = new ComponentDispatcher()
 
 const run = async ()=>{
 
   const dirsInfos = await ComponentReader.getAllDirsInfos()
 
   for(const dirInfo of dirsInfos){
-    const compReader = new ComponentReader(dirInfo)
-    const componentType = compReader.getComponentType()
-    const configFile = compReader.getConfigFile()
-
-    if(componentType instanceof Error)
-      await Promise.reject(componentType.message)
-    else
-      ComponentArchitect.addComponent(
-        componentType,
-        configFile? configFile.componentWorkDir : "",
-        componentHandler(componentReader)
-        )
+    const CompReader = new ComponentReader(dirInfo)
+    const addResult = CompDispatcher.addComponent(CompReader)
+    if(addResult instanceof Error)
+      return Promise.reject(addResult.message)
   }
+
+  const Result = CLIHandler.build(CompDispatcher)
+  if(Result instanceof Error)
+    return Promise.reject(Result.message)
+
+
+  const componentType = Result.componentType
+  const compReaderResult = CompDispatcher.getComponentReader(componentType)
+  if(compReaderResult instanceof Error)
+    return Promise.reject(compReaderResult.message)
+
+  Result.execute(compReaderResult)
 
 }
 
 run()
-  .then()
+  .then(()=> console.log("Le composant à été créer avec succès"))
   .catch(err=> {
     console.log(err)
   })
-
-/*
-
-ComponentArchitect.addComponent('uc','application/use-cases')
-ComponentArchitect.addComponent('entity','domain/entities')
-
-Generator.build(ComponentArchitect)
-  .then((generator)=>generator.execute())
-  .catch(err=> {
-    console.log(`Une erreur est survenue: `,err)
-  })
-*/
-

@@ -1,45 +1,42 @@
+import {IComponentReader} from "./ComponentReader";
+
 type Path = string
-type handler = () => any
 
 export interface IComponentDispatcher{
-  addComponent(componentName:string ,path:Path, handler:handler) : string | true
-  getPath(componentName) : false | string
-  getHandler(componentName) : false | handler
-  components : string[]
+  componentTypes : string[]
+  addComponent(compReader:IComponentReader) : Error | void
+  getComponentReader(componentName) : Error | IComponentReader
 }
 
 export class ComponentDispatcher implements IComponentDispatcher{
 
-  private MapPathAndComponent: Map<string, Path > = new Map()
-  private MapHandlerAndComponent: Map<string, handler> = new Map()
+  private MapHandlerAndComponent: Map<string, IComponentReader> = new Map()
 
-  addComponent(componentType , path, handler) : string | true {
-    if(this.MapPathAndComponent.has(componentType))
-      return "Ce composant existe deja"
-    else if([...this.MapPathAndComponent.values()].includes(path))
-      return "Ce path est déjà utilisé pour un autre composant"
-    else{
-      this.MapPathAndComponent.set(componentType,path)
-      this.MapHandlerAndComponent.set(componentType,handler)
-      return true
-    }
+
+  addComponent( compReader : IComponentReader ) : Error | void {
+    const componentTypeResult = compReader.getComponentType()
+    if(componentTypeResult instanceof Error)
+      return componentTypeResult
+    if(this.MapHandlerAndComponent.has(componentTypeResult))
+      return new Error("Ce composant existe deja : Vous avez deux modèles ayant le même nom")
+
+    const componentPaths : string[] = [...this.MapHandlerAndComponent.values()].map(compReader=> compReader.componentWorkDirPath)
+    if(componentPaths.includes(compReader.componentWorkDirPath))
+      console.log("Attention : Ce répertoire est également utilisé pour un autre composant")
+
+    this.MapHandlerAndComponent.set(componentTypeResult,compReader)
+
   }
 
-  getPath(componentName) : false | string {
-    const path = this.MapPathAndComponent.get(componentName)
-    return path ? path : false
+  getComponentReader(componentType) : Error | IComponentReader {
+    const compReader = this.MapHandlerAndComponent.get(componentType)
+    if(compReader)
+      return compReader
+    return new Error(`Aucun composant nommé ${componentType} n'as été répertorier !`)
   }
 
-  getHandler(componentName) : false | handler {
-    const handler = this.MapHandlerAndComponent.get(componentName)
-    if(handler)
-      return handler
-    else
-      return false
-  }
-
-  get components (){
-    return [...this.MapPathAndComponent.keys()]
+  get componentTypes(){
+    return [...this.MapHandlerAndComponent.keys()]
   }
 
 }
