@@ -14,5 +14,5 @@ export const nameGlobalConfigFile = "config-global.json"
 export const nameComponentConfigFile = "config-component.json"
 export const separator = "@"
 
-const globalConfigFile : IGlogalConfigFile = JSON.parse(fs.readFileSync(path.resolve(`${nameConfigDir}/${nameGlobalConfigFile}`)).toString())
+export const globalConfigFile : IGlogalConfigFile = JSON.parse(fs.readFileSync(path.resolve(`${nameConfigDir}/${nameGlobalConfigFile}`)).toString())
 export const pathGlobalWorkDir  = path.resolve(globalConfigFile.globalWorkDir)

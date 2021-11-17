@@ -9,7 +9,7 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/app.js",
     "dev": "nodemon",
-    "component": "ts-node componentGenerator/Generator.ts"
+    "component": "ts-node src/app.ts"
   },
   "repository": {
     "type": "git",

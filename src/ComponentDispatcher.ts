@@ -18,7 +18,7 @@ export class ComponentDispatcher implements IComponentDispatcher{
     if(componentTypeResult instanceof Error)
       return componentTypeResult
     if(this.MapHandlerAndComponent.has(componentTypeResult))
-      return new Error("Ce composant existe deja : Vous avez deux modèles ayant le même nom")
+      return new Error("Un problème est survenu car vous avez deux modèles ayant le même nom ! ")
 
     const componentPaths : string[] = [...this.MapHandlerAndComponent.values()].map(compReader=> compReader.componentWorkDirPath)
     if(componentPaths.includes(compReader.componentWorkDirPath))

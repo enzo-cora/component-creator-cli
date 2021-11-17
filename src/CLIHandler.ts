@@ -10,12 +10,12 @@ enum CommandTypeEnum {
 }
 
 
-interface IGenerator {
+export interface IGenerator {
   cmd : CommandTypeEnum
   replacementName: string
   componentSubdomainPath : string
   componentType : string
-  execute(compReader : IComponentReader) : void
+  execute(compReader : IComponentReader) : void | Error
 }
 
 export class CLIHandler implements IGenerator{
@@ -41,13 +41,13 @@ export class CLIHandler implements IGenerator{
     const fileCreations : FileCreation[] = transformedFilesResult.map(file => ({fileName :file,data : ""}))
     switch (this.cmd){
       case CommandTypeEnum.create :
-        const creatteCompResult = createComponent(
+        const createCompResult = createComponent(
           finalComponentDirPath,
           transformedDirName,
           fileCreations
         )
-        if(creatteCompResult instanceof Error)
-          return creatteCompResult
+        if(createCompResult instanceof Error)
+          return createCompResult
         break
     }
   }

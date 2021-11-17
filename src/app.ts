@@ -16,17 +16,19 @@ const run = async ()=>{
       return Promise.reject(addResult.message)
   }
 
-  const Result = CLIHandler.build(CompDispatcher)
-  if(Result instanceof Error)
-    return Promise.reject(Result.message)
+  const CLIResult = CLIHandler.build(CompDispatcher)
+  if(CLIResult instanceof Error)
+    return Promise.reject(CLIResult.message)
 
 
-  const componentType = Result.componentType
+  const componentType = CLIResult.componentType
   const compReaderResult = CompDispatcher.getComponentReader(componentType)
   if(compReaderResult instanceof Error)
     return Promise.reject(compReaderResult.message)
 
-  Result.execute(compReaderResult)
+  const executionResult = CLIResult.execute(compReaderResult)
+  if (executionResult instanceof Error)
+    return Promise.reject(executionResult.message)
 
 }
 
