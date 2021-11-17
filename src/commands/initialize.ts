@@ -17,7 +17,7 @@ const CompDispatcher = new ComponentDispatcher()
 
 const run = async ()=>{
 
-  const dirsInfos = await TemplateReader.getTemplatesDirsInfos()
+  const dirsInfos = await TemplateReader.getAllTemplateDirInfo()
 
   for(const dirInfo of dirsInfos){
     const CompReader = new TemplateReader(dirInfo)

@@ -1,4 +1,4 @@
-import {ITemplateDirInfos, TemplateReader} from "../TemplateReader";
+import {TemplateReader} from "../TemplateReader";
 import {ComponentDispatcher} from "../ComponentDispatcher";
 import {ComponentInfosGenerator} from "../ComponentInfosGenerator";
 
@@ -10,19 +10,17 @@ export const create : ICreateCommand = async (
 {
   // const CompDispatcher = new ComponentDispatcher()
   const templatesDirsInfosResult = await TemplateReader.getAllTemplateDirInfo()
+
   if(templatesDirsInfosResult instanceof Error)
     return console.log(templatesDirsInfosResult.message)
 
+  for(const templateDirInfo of templatesDirsInfosResult){
+    const CompReader = new TemplateReader(templateDirInfo)
+    const addComponentResult = CompDispatcher.addComponent(CompReader)
+    if(addComponentResult instanceof Error)
+      return console.log(addComponentResult.message)
+  }
 
-  const templateDirInfo = findWantedTemplateInfo(templateName, templatesDirsInfosResult)
-  if(templateDirInfo instanceof Error)
-    return console.log(templateDirInfo.message)
-
-  const templatesFilesInfos = TemplateReader.getAllTemplateFilesInfo(templateDirInfo)
-
-  const templateReader = new TemplateReader(templateDirInfo, templatesFilesInfos)
-
-  templateReader.
   const CompInfosGeneneratorResult = ComponentInfosGenerator.build(
     templateName,
     replacementName
@@ -38,14 +36,6 @@ export const create : ICreateCommand = async (
 }
 
 
-function findWantedTemplateInfo(wantedTemplateName : string, dirsInfo : ITemplateDirInfos[]) : Error | ITemplateDirInfos{
-  const dirInfoFound =  dirsInfo.find(dirInfo => dirInfo.templateName === wantedTemplateName)
-  if(!dirInfoFound)
-    return new Error(`Aucune template nommé ${wantedTemplateName} n'as été trouvé`)
-  else
-    return dirInfoFound
-
-}
 
 const CompDispatcher = new ComponentDispatcher()
 

@@ -1,68 +1,106 @@
 import fs, {readdirSync} from "fs";
 import path from "path";
-import {separator, nameComponentConfigFile, nameConfigDir, nameGlobalConfigFile, keywordReplacement} from "./_config";
+import {
+  separator,
+  nameComponentConfigFile,
+  nameConfigDir,
+  keywordReplacement,
+  ERR_TEMPLATE_DIR_NAME_PART1, ERR_TEMPLATE_DIR_NAME_PART2
+} from "./_config";
 import {IComponentConfigFile} from "./_definitions/IComponentConfigFile";
 import {readdir} from "fs/promises";
 
 export interface ITemplateReader {
   componentWorkDirPath: string
-  templateFilesInfos : templateFileInfo[]
-  templateDirInfos : templateDirInfos
-  getTemplateName(): string | Error
+  templateDirInfos : ITemplateDirInfos
+  templateFilesInfos : ITemplateFileInfo[]
   createComponentDirName (replaceValue : string) : string | Error
   createComponentFilesNames(replaceValue : string) : string[] | Error
   // createComponentFIlesData(replaceValue : string) : string | Error
 }
 
-export type templateDirInfos = {
+export type ITemplateDirInfos = {
+  templateName: string
   dirName : string,
-  dirPath : string
+  dirPath : string,
 }
 
-export type templateFileInfo = {
+export type ITemplateFileInfo = {
   fileName : string,
   filePath : string
 }
 
 const regexDirectory =  new RegExp(`(^[\\w]+)${separator}([\\S]+)`)
+const exempleMsg =  `(Exemple : ex: TemplateName${separator}Interface${keywordReplacement}Entity)`
 
 export class TemplateReader implements ITemplateReader{
 
 
-  templateFilesInfos : templateFileInfo[]
   componentWorkDirPath : string
 
   constructor(
-    public templateDirInfos : templateDirInfos,
+    public templateDirInfos : ITemplateDirInfos,
+    public templateFilesInfos : ITemplateFileInfo[],
   ) {
-
     const configFileResult = this.getTemplateConfigFile()
     if(!configFileResult)
       this.componentWorkDirPath = ""
     else
       this.componentWorkDirPath = configFileResult.componentWorkDir
-
-    this.templateFilesInfos = this.getAllTemplateFilesInfos()
   }
 
-  static async getTemplatesDirsInfos() : Promise<templateDirInfos[] | Error> {
+  private static checkAllTemplateDirInfo(templatesDirInfos : ITemplateDirInfos[]) : void | Error {
+    const errors : string[] = []
+
+    for(const templateDirInfos of templatesDirInfos){
+      const templateDirName = templateDirInfos.dirName
+      const templateDirNameParted = regexDirectory.exec(templateDirName)
+      if( !templateDirNameParted || !templateDirNameParted[1] )
+        errors.push(`Problème sur le template ${templateDirName} :\n ${ERR_TEMPLATE_DIR_NAME_PART1}`)
+      else if(!templateDirNameParted || !templateDirNameParted[2])
+        errors.push(`Problème sur le template ${templateDirName} : ${ERR_TEMPLATE_DIR_NAME_PART2}`)
+    }
+
+    if(errors.length){
+      const textError = errors.join(`\n-----------------------------`)
+      return new Error(textError)
+    }
+
+  }
+
+
+  private static getTemplateName(templateDirName) : string {
+    const templateDirNameParted = regexDirectory.exec(templateDirName) as RegExpExecArray
+    return templateDirNameParted[1]
+  }
+
+
+  static async getAllTemplateDirInfo() : Promise<ITemplateDirInfos[] | Error> {
     try {
       const globalDirConfigPath = path.resolve(nameConfigDir)
       if(!fs.existsSync(globalDirConfigPath))
         return new Error(`Problème ! Le répertoire global de configuration est manquant !`)
 
       const result = await readdir(globalDirConfigPath, { withFileTypes: true })
-      return  result
+      const dirInfos = result
         .filter(dirent => dirent.isDirectory())
-        .map(dirent => ( {dirName : dirent.name, dirPath :`${globalDirConfigPath}/${dirent.name}`} ))
+        .map(dirent => ( {
+          templateName : this.getTemplateName(dirent.name),
+          dirName : dirent.name,
+          dirPath :`${globalDirConfigPath}/${dirent.name}`
+        } ))
+      const checkingResult = this.checkAllTemplateDirInfo(dirInfos)
+
+      return checkingResult instanceof Error ? checkingResult : dirInfos
+
     }
     catch (err){
-      return new Error(`Une erreur s'est produite : ${err}`)
+      return new Error(`Une erreur innatendue s'est produite : ${err}`)
     }
   }
 
-  private getAllTemplateFilesInfos() : templateFileInfo[] {
-    const templateDirPath = this.templateDirInfos.dirPath
+
+  static getAllTemplateFilesInfo(templateDirPath) : ITemplateFileInfo[] {
     const readDirResult = readdirSync(templateDirPath, { withFileTypes: true })
     return  readDirResult
       .filter(file => file.isFile() && file.name !== nameComponentConfigFile)
@@ -71,6 +109,7 @@ export class TemplateReader implements ITemplateReader{
         filePath : `${templateDirPath}/${file.name}`,
       }))
   }
+
 
   private getTemplateConfigFile() : IComponentConfigFile | null {
     const templateDirPath = this.templateDirInfos.dirPath
@@ -83,29 +122,19 @@ export class TemplateReader implements ITemplateReader{
     return null
   }
 
-  getTemplateName() : string | Error {
-    const templateDirName = this.templateDirInfos.dirName
-    const templateDirNameParted = regexDirectory.exec(templateDirName)
-    if( !templateDirNameParted || !templateDirNameParted[1] )
-      return new Error(`Vous devez donner un type à votre composant. Ecrivez-le dans le nom du dossier DEVANT le 
-      séparateur suivant "${separator}" (ex: TemplateName${separator}${keywordReplacement}Entity) `)
-
-    return templateDirNameParted[1]
-  }
-
   createComponentDirName(replaceValue : string) : string | Error {
     const templateDirName = this.templateDirInfos.dirName
     const templateDirNameParted = regexDirectory.exec(templateDirName)
     if(!templateDirNameParted || !templateDirNameParted[2])
-      return new Error(`Le nom du dossier modèle doit contenir le Format du future Nom ! (ex: TemplateName${separator}${keywordReplacement}Entity )`)
+      return new Error(`Problème sur le template ${templateDirName} : ${ERR_TEMPLATE_DIR_NAME_PART2}`)
 
     return templateDirNameParted[2].replace(keywordReplacement, replaceValue)
   }
 
 
   createComponentFilesNames (replaceValue : string):  string[] | Error {
-    return this.templateFilesInfos.map(rawfileInfo =>
-      rawfileInfo.fileName.replace(keywordReplacement, replaceValue)
+    return this.templateFilesInfos.map(templateFileInfo =>
+      templateFileInfo.fileName.replace(keywordReplacement, replaceValue)
     )
   }
 

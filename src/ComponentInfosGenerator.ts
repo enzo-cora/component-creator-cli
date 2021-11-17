@@ -12,7 +12,6 @@ enum CommandTypeEnum {
 export interface IComponentInfosGenerator {
   replacementName: string
   componentSubdomainPath : string
-  // templateName : string
   generateComponentInfos(templateReader : ITemplateReader) : IComponentInformations | Error
 }
 
@@ -28,8 +27,55 @@ export class ComponentInfosGenerator implements IComponentInfosGenerator{
   private constructor(
     public componentSubdomainPath : string,
     public replacementName : string,
-    // public templateName : string,
   ) {}
+
+
+  static build(argTemplateName:string, argReplacementName:string, optSubDomainName? : string) : IComponentInfosGenerator | Error {
+
+    const checkingTemplateName = this.checkTemplateName(argTemplateName)
+    const checkingReplacementName = this.checkReplacementName(argReplacementName)
+
+    const componantSubdomainPathResult = this.getComponentSubDomainPath(optSubDomainName)
+
+    if(checkingTemplateName instanceof Error)
+      return checkingTemplateName
+    else if(checkingReplacementName instanceof Error)
+      return checkingReplacementName
+
+    if(componantSubdomainPathResult instanceof Error)
+      return componantSubdomainPathResult
+
+    return new ComponentInfosGenerator(componantSubdomainPathResult,argReplacementName)
+  }
+
+
+
+  private static checkReplacementName(replacementName: string) : void | Error {
+    if(replacementName === "")
+      return new Error("Vous devez fournir le nom du composant a créer (ex: 'Guitare') ")
+  }
+
+
+  private static checkTemplateName(argTemplateName: string) :  void | Error {
+    if(argTemplateName === "")
+      return new Error("Vous devez fournir le type de composant a créer (ex: 'entity')")
+  }
+
+  private static getComponentSubDomainPath(subDomainName? : string) : string | Error {
+    if(subDomainName){
+      const subDomainPath = `${pathGlobalWorkDir}/${subDomainName}`
+      if(fs.existsSync(subDomainPath))
+        return subDomainPath
+      else
+        return new Error(`Le sous-domaine "${subDomainName}" n'existe pas dans : \n ${subDomainPath}`)
+    }
+    else{
+      if(fs.existsSync(pathGlobalWorkDir))
+        return pathGlobalWorkDir
+      else
+        return  new Error(`Le domaine "${pathGlobalWorkDir}" n'existe pas`)
+    }
+  }
 
   generateComponentInfos(CompReader : ITemplateReader) : IComponentInformations | Error {
     const componentDirPath = `${this.componentSubdomainPath}/${CompReader.componentWorkDirPath}`
@@ -48,57 +94,7 @@ export class ComponentInfosGenerator implements IComponentInfosGenerator{
       componentDirPath,
       componentFiles: componentFilesInfos
     }
-
   }
 
-  static build(argTemplateName:string, argReplacementName:string, optSubDomainName? : string) : IComponentInfosGenerator | Error {
-
-    const checkTemplateNameResult = this.checkModelName(argTemplateName)
-    const checkReplacementNameResult = this.checkReplacementName(argReplacementName)
-
-    const componantSubdomainPathResult = this.getComponentSubDomainPath(optSubDomainName)
-
-    if(checkTemplateNameResult instanceof Error)
-      return checkTemplateNameResult
-    else if(checkReplacementNameResult instanceof Error)
-      return checkReplacementNameResult
-
-    if(componantSubdomainPathResult instanceof Error)
-      return componantSubdomainPathResult
-
-    return new ComponentInfosGenerator(componantSubdomainPathResult,argReplacementName)
-  }
-
-
-
-  private static checkReplacementName(replacementName: string) : void | Error {
-    if(replacementName === "")
-      return new Error("Vous devez fournir le nom du composant a créer (ex: 'Guitare') ")
-  }
-
-
-  private static checkModelName(argTemplateName: string) :  void | Error {
-    const templateNames : string[] = [] //Get from persistance
-    if(argTemplateName === "")
-      return new Error("Vous devez fournir le type de composant a créer (ex: 'entity')")
-    else if(!templateNames.includes(argTemplateName))
-      return new Error("Le composant que vous souhaitez créer n'existe pas")
-  }
-
-  private static getComponentSubDomainPath(subDomainName? : string) : string | Error {
-    if(subDomainName){
-      const subDomainPath = `${pathGlobalWorkDir}/${subDomainName}`
-      if(fs.existsSync(subDomainPath))
-        return subDomainPath
-      else
-        return new Error(`Le sous-domaine "${subDomainName}" n'existe pas dans : \n ${subDomainPath}`)
-    }
-    else{
-      if(fs.existsSync(pathGlobalWorkDir))
-        return pathGlobalWorkDir
-      else
-        return  new Error(`Le domaine "${pathGlobalWorkDir}" n'existe pas`)
-    }
-  }
 
 }
