@@ -25,7 +25,7 @@ export const createComponent : IComponentCreator = (
     fs.appendFile(`${mkdirPath}/${file.fileName}`,file.data,(err)=>{
       return new Error(`Une erreur c'est produite pendant la création du fichier "${file.fileName}" : \n ${err}` )
     })
-    console.log(`Ficher ${file.fileName} : Création terminée`)
+    console.log(`Fichier ${file.fileName} : Création OK`)
   }
 
 }

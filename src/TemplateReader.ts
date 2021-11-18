@@ -5,7 +5,7 @@ import {
   nameComponentConfigFile,
   nameConfigDir,
   keywordReplacement,
-  ERR_TEMPLATE_DIR_NAME_PART1, ERR_TEMPLATE_DIR_NAME_PART2, regexDirectory
+  ERR_TEMPLATE_DIR_NAME_PART1, ERR_TEMPLATE_DIR_NAME_PART2, regexDirectory, absolutePathConfigDir
 } from "./_config";
 import {ITemplateConfigFile} from "./_definitions/ITemplateConfigFile";
 import {readdir} from "fs/promises";
@@ -78,16 +78,13 @@ export class TemplateReader implements ITemplateReader{
 
   private static async getAllTemplateDirInfo() : Promise<ITemplateDirInfos[] | Error> {
     try {
-      const globalDirConfigPath = path.resolve(nameConfigDir)
-      if(!fs.existsSync(globalDirConfigPath))
-        return new Error(`Problème ! Le répertoire global de configuration est manquant !`)
 
-      const result = await readdir(globalDirConfigPath, { withFileTypes: true })
+      const result = await readdir(absolutePathConfigDir, { withFileTypes: true })
       const dirInfo = result
         .filter(dirent => dirent.isDirectory())
         .map(dirent => ( {
           dirName : dirent.name,
-          dirPath :`${globalDirConfigPath}/${dirent.name}`
+          dirPath :`${absolutePathConfigDir}/${dirent.name}`
         } ))
       const checkingResult = this.checkAllTemplateDirInfo(dirInfo)
 

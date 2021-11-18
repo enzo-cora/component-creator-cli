@@ -2,7 +2,7 @@ import {TemplateReader} from "../TemplateReader";
 import {ComponentInfosGenerator} from "../ComponentInfosGenerator";
 import {createComponent} from "../FilesHandlers/createComponent";
 
-export type ICreateCommand = (templateName:string, replaceValue:string, opts: any) => Promise<void>
+export type ICreateCommand = (templateName:string, replaceValue:string, opts?: any) => Promise<void>
 
 export const create : ICreateCommand = async (
   templateName:string,

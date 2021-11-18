@@ -3,21 +3,24 @@ import path from "path";
 import {IGlogalConfigFile} from "./_definitions/IGlogalConfigFile";
 
 
-export const keywordReplacement = "[CamelCase]"
-export const nameConfigDir = "component-architect-config"
-export const nameGlobalConfigFile = "config-global.json"
-export const nameComponentConfigFile = "config-component.json"
-export const separator = "@"
+export const keywordReplacement :string = "[CamelCase]"
 
-const JsonGlobalConfigFile : IGlogalConfigFile = JSON.parse(fs.readFileSync(path.resolve(`${nameConfigDir}/${nameGlobalConfigFile}`)).toString())
-export const domainRelativePath = JsonGlobalConfigFile.domainWorkDirectory
+export const cliCommandName = "compo"
+export const separator :string = "@"
 
 
+export const nameConfigDir :string = "component-architect-config"
+export const absolutePathConfigDir : string = path.resolve(nameConfigDir)
+
+export const nameGlobalConfigFile :string = "config-global.json"
+export const JsonGlobalConfigFile : IGlogalConfigFile = JSON.parse(fs.readFileSync(path.resolve(`${nameConfigDir}/${nameGlobalConfigFile}`)).toString())
+
+export const nameComponentConfigFile :string = "config-component.json"
 
 const exempleMsg =  `(Exemple : ex: TemplateName${separator}Future${keywordReplacement}Name)`
-export const ERR_TEMPLATE_DIR_NAME_PART1 = `Vous devez donner un nom à votre template,ecrivez-le nom en toute lettre DEVANT le séparateur "${separator}" \n ${exempleMsg}`
-export const ERR_TEMPLATE_DIR_NAME_PART2 = `Le nom du répertoire du template doit contenir le Format du future Nom ! \n ${exempleMsg}`
+export const ERR_TEMPLATE_DIR_NAME_PART1 :string  = `Vous devez donner un nom à votre template,ecrivez-le nom en toute lettre DEVANT le séparateur "${separator}" \n ${exempleMsg}`
+export const ERR_TEMPLATE_DIR_NAME_PART2 :string = `Le nom du répertoire du template doit contenir le Format du future Nom ! \n ${exempleMsg}`
 
 
 
-export const regexDirectory =  new RegExp(`(^[\\w]+)${separator}([\\S]+)`)
+export const regexDirectory : RegExp =  new RegExp(`(^[\\w]+)${separator}([\\S]+)`)

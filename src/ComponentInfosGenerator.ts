@@ -1,8 +1,7 @@
 import * as fs from "fs";
 import {
-  ERR_TEMPLATE_DIR_NAME_PART2,
-  keywordReplacement,
-  domainRelativePath,
+  ERR_TEMPLATE_DIR_NAME_PART2, JsonGlobalConfigFile,
+  keywordReplacement, nameComponentConfigFile, nameGlobalConfigFile,
   regexDirectory
 } from "./_config";
 import {ITemplateFileInfo, ITemplateReader} from "./TemplateReader";
@@ -75,9 +74,11 @@ export class ComponentInfosGenerator implements IComponentInfosGenerator{
     compWrkDirRelativePath?:string,
     subDomainName?:string) : string | Error
   {
+
+    const domainRelativePath = JsonGlobalConfigFile.domainWorkDirectory
     const domainAbsolutePath = path.resolve(domainRelativePath)
     if(!fs.existsSync(domainAbsolutePath))
-      return new Error(`Le domaine "${domainRelativePath}" n'existe pas dans votre projet :\n"${path.resolve()}"`)
+      return new Error(`Le domaine "${domainRelativePath}" n'existe pas dans votre projet :\n "${path.resolve()}"`)
 
     let componentWrkDirAbsolutePath, subDomainAbsolutePath
 
