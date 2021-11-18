@@ -22,9 +22,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/enzo-cora/component-architect/issues"
+    "url": "https://github.com/enzo-cora/component-creator-cli/issues"
   },
-  "homepage": "https://github.com/enzo-cora/component-architect#readme",
+  "homepage": "https://github.com/enzo-cora/component-creator-cli#readme",
   "devDependencies": {
     "@types/node": "^16.11.6",
     "nodemon": "^2.0.14",
