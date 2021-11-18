@@ -17,8 +17,7 @@
     "creator",
     "generator",
     "cli",
-    "ddd",
-    "MVC"
+    "domain-driven-design"
   ],
   "license": "MIT",
   "bugs": {
