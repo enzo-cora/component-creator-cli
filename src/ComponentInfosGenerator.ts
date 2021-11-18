@@ -1,100 +1,123 @@
 import * as fs from "fs";
-import {pathGlobalWorkDir} from "./_config";
-import {componentFileInfo, createComponent} from "./FilesHandlers/createComponent";
-import {ITemplateReader} from "./TemplateReader";
+import {
+  ERR_TEMPLATE_DIR_NAME_PART2,
+  keywordReplacement,
+  domainRelativePath,
+  regexDirectory
+} from "./_config";
+import {ITemplateFileInfo, ITemplateReader} from "./TemplateReader";
+import path from "path";
 
-enum CommandTypeEnum {
-  create = "create",
-  delete = "create"
+
+export interface IComponentFileInfo {
+  fileName : string,
+  data : string
 }
 
 
 export interface IComponentInfosGenerator {
-  replacementName: string
-  componentSubdomainPath : string
-  generateComponentInfos(templateReader : ITemplateReader) : IComponentInformations | Error
+  componentDirName : string
+  componentFiles : IComponentFileInfo[]
+  componentMkdirPath : string
 }
 
-export interface IComponentInformations {
-  componentDirPath : string
-  componentDirName : string
-  componentFiles : componentFileInfo[]
-}
 
 export class ComponentInfosGenerator implements IComponentInfosGenerator{
 
 
   private constructor(
-    public componentSubdomainPath : string,
-    public replacementName : string,
+    public componentDirName : string,
+    public componentMkdirPath : string,
+    public componentFiles : IComponentFileInfo[]
   ) {}
 
 
-  static build(argTemplateName:string, argReplacementName:string, optSubDomainName? : string) : IComponentInfosGenerator | Error {
+  static build(templateInfos:ITemplateReader, argReplaceValue:string, optSubDomainName? : string) : IComponentInfosGenerator | Error {
 
-    const checkingTemplateName = this.checkTemplateName(argTemplateName)
-    const checkingReplacementName = this.checkReplacementName(argReplacementName)
+    const checkReplaceValue = this.checkReplaceValue(argReplaceValue)
+    if(checkReplaceValue instanceof Error)
+      return checkReplaceValue
 
-    const componantSubdomainPathResult = this.getComponentSubDomainPath(optSubDomainName)
+    const compomentDirNameResult = this.createComponentDirName(templateInfos.templateDirInfo.dirName, argReplaceValue)
+    if(compomentDirNameResult instanceof Error)
+      return compomentDirNameResult
 
-    if(checkingTemplateName instanceof Error)
-      return checkingTemplateName
-    else if(checkingReplacementName instanceof Error)
-      return checkingReplacementName
+    const absolutePathcomponantWorkDirResult = this.getComponentWorkDirPath(
+      templateInfos.templateConfigFile?.componentWorkDirectory,
+      optSubDomainName
+    )
 
-    if(componantSubdomainPathResult instanceof Error)
-      return componantSubdomainPathResult
+    if(absolutePathcomponantWorkDirResult instanceof Error)
+      return absolutePathcomponantWorkDirResult
 
-    return new ComponentInfosGenerator(componantSubdomainPathResult,argReplacementName)
+    const componentMkdirPath = `${absolutePathcomponantWorkDirResult}/${compomentDirNameResult}`
+
+    const componentFilesInfoResult = this.createComponentFilesInfo(templateInfos.templateFilesInfo,argReplaceValue)
+    if(componentFilesInfoResult instanceof Error)
+      return componentFilesInfoResult
+
+
+    return new ComponentInfosGenerator(
+      compomentDirNameResult,
+      componentMkdirPath,
+      componentFilesInfoResult
+    )
   }
 
 
 
-  private static checkReplacementName(replacementName: string) : void | Error {
-    if(replacementName === "")
+  private static checkReplaceValue(replaceValue: string) : void | Error {
+    if(replaceValue === "")
       return new Error("Vous devez fournir le nom du composant a créer (ex: 'Guitare') ")
   }
 
+  private static getComponentWorkDirPath(
+    compWrkDirRelativePath?:string,
+    subDomainName?:string) : string | Error
+  {
+    const domainAbsolutePath = path.resolve(domainRelativePath)
+    if(!fs.existsSync(domainAbsolutePath))
+      return new Error(`Le domaine "${domainRelativePath}" n'existe pas dans votre projet :\n"${path.resolve()}"`)
 
-  private static checkTemplateName(argTemplateName: string) :  void | Error {
-    if(argTemplateName === "")
-      return new Error("Vous devez fournir le type de composant a créer (ex: 'entity')")
-  }
+    let componentWrkDirAbsolutePath, subDomainAbsolutePath
 
-  private static getComponentSubDomainPath(subDomainName? : string) : string | Error {
     if(subDomainName){
-      const subDomainPath = `${pathGlobalWorkDir}/${subDomainName}`
-      if(fs.existsSync(subDomainPath))
-        return subDomainPath
-      else
-        return new Error(`Le sous-domaine "${subDomainName}" n'existe pas dans : \n ${subDomainPath}`)
+      subDomainAbsolutePath = `${domainRelativePath}/${subDomainName}`
+      if(!fs.existsSync(componentWrkDirAbsolutePath))
+        return new Error(`Le sous-domaine "${subDomainName}" n'existe pas dans : \n ${path.relative(path.resolve(),domainAbsolutePath)}`)
     }
-    else{
-      if(fs.existsSync(pathGlobalWorkDir))
-        return pathGlobalWorkDir
-      else
-        return  new Error(`Le domaine "${pathGlobalWorkDir}" n'existe pas`)
+
+    if(subDomainName && compWrkDirRelativePath){
+      componentWrkDirAbsolutePath = `${subDomainAbsolutePath}/${compWrkDirRelativePath}`
+      if(!fs.existsSync(componentWrkDirAbsolutePath))
+        return new Error(`Le répertoire de travail "${compWrkDirRelativePath}" n'existe pas dans : \n  ${path.relative(path.resolve(),subDomainAbsolutePath)}`)
     }
+    else if(!subDomainName && compWrkDirRelativePath){
+      componentWrkDirAbsolutePath = `${domainAbsolutePath}/${compWrkDirRelativePath}`
+      if(!fs.existsSync(componentWrkDirAbsolutePath))
+        return new Error(`Le répertoire de travail "${compWrkDirRelativePath}" n'existe pas dans : \n  ${path.relative(path.resolve(),domainAbsolutePath)}`)
+    }
+    else
+      componentWrkDirAbsolutePath = domainAbsolutePath
+
+    return componentWrkDirAbsolutePath
+
   }
 
-  generateComponentInfos(CompReader : ITemplateReader) : IComponentInformations | Error {
-    const componentDirPath = `${this.componentSubdomainPath}/${CompReader.componentWorkDirPath}`
-    const componentDirNameResult = CompReader.createComponentDirName(this.replacementName)
-    const componentFilesResult = CompReader.createComponentFilesNames(this.replacementName)
+  private static createComponentDirName(templateDirName:string, replaceValue : string) : string | Error {
+    const templateDirNameParted = regexDirectory.exec(templateDirName)
+    if(!templateDirNameParted || !templateDirNameParted[2])
+      return new Error(`Problème sur le template ${templateDirName} : ${ERR_TEMPLATE_DIR_NAME_PART2}`)
 
-    if(componentDirNameResult instanceof Error)
-      return new Error(componentDirNameResult.message)
-    else if(componentFilesResult instanceof Error)
-      return new Error(componentFilesResult.message)
-
-    const componentFilesInfos : componentFileInfo[] = componentFilesResult.map(componentFile => ({fileName :componentFile,data : ""}))
-
-    return <IComponentInformations>{
-      componentDirName: componentDirNameResult,
-      componentDirPath,
-      componentFiles: componentFilesInfos
-    }
+    return templateDirNameParted[2].replace(keywordReplacement, replaceValue)
   }
 
+
+  private static createComponentFilesInfo (templateFilesInfos:ITemplateFileInfo[],replaceValue:string):  IComponentFileInfo[] | Error {
+    return templateFilesInfos.map(templateFileInfo =>({
+      fileName : templateFileInfo.fileName.replace(keywordReplacement, replaceValue),
+      data : ""
+    }))
+  }
 
 }

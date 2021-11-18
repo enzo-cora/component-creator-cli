@@ -5,22 +5,13 @@ import {
   nameComponentConfigFile,
   nameConfigDir,
   keywordReplacement,
-  ERR_TEMPLATE_DIR_NAME_PART1, ERR_TEMPLATE_DIR_NAME_PART2
+  ERR_TEMPLATE_DIR_NAME_PART1, ERR_TEMPLATE_DIR_NAME_PART2, regexDirectory
 } from "./_config";
-import {IComponentConfigFile} from "./_definitions/IComponentConfigFile";
+import {ITemplateConfigFile} from "./_definitions/ITemplateConfigFile";
 import {readdir} from "fs/promises";
 
-export interface ITemplateReader {
-  componentWorkDirPath: string
-  templateDirInfos : ITemplateDirInfos
-  templateFilesInfos : ITemplateFileInfo[]
-  createComponentDirName (replaceValue : string) : string | Error
-  createComponentFilesNames(replaceValue : string) : string[] | Error
-  // createComponentFIlesData(replaceValue : string) : string | Error
-}
 
 export type ITemplateDirInfos = {
-  templateName: string
   dirName : string,
   dirPath : string,
 }
@@ -30,23 +21,97 @@ export type ITemplateFileInfo = {
   filePath : string
 }
 
-const regexDirectory =  new RegExp(`(^[\\w]+)${separator}([\\S]+)`)
-const exempleMsg =  `(Exemple : ex: TemplateName${separator}Interface${keywordReplacement}Entity)`
+
+export interface ITemplateReader {
+  templateName: string
+  templateDirInfo : ITemplateDirInfos
+  templateFilesInfo : ITemplateFileInfo[]
+  templateConfigFile : ITemplateConfigFile | null
+}
+
 
 export class TemplateReader implements ITemplateReader{
 
+  private constructor(
+    public templateName: string,
+    public templateDirInfo : ITemplateDirInfos,
+    public templateFilesInfo : ITemplateFileInfo[],
+    public templateConfigFile : ITemplateConfigFile | null
+  ) {}
 
-  componentWorkDirPath : string
 
-  constructor(
-    public templateDirInfos : ITemplateDirInfos,
-    public templateFilesInfos : ITemplateFileInfo[],
-  ) {
-    const configFileResult = this.getTemplateConfigFile()
-    if(!configFileResult)
-      this.componentWorkDirPath = ""
+  static async build(wtedTemplateName : string) : Promise<ITemplateReader | Error> {
+
+    const allTemplatesDirInfoResult = await this.getAllTemplateDirInfo()
+    if(allTemplatesDirInfoResult instanceof Error)
+      return  allTemplatesDirInfoResult
+
+    let templateName
+    const templateDirInfoResult = this.findWantedTemplate(wtedTemplateName,allTemplatesDirInfoResult)
+    if(templateDirInfoResult instanceof Error)
+      return templateDirInfoResult
     else
-      this.componentWorkDirPath = configFileResult.componentWorkDir
+      templateName = wtedTemplateName
+
+    const templateConfigFile = this.getTemplateConfigFile(templateDirInfoResult)
+    const templateFilesInfosResult = await this.getAllTemplateFilesInfo(templateDirInfoResult.dirPath)
+
+    if(templateFilesInfosResult instanceof Error)
+      return templateFilesInfosResult
+
+    return {
+      templateName,
+      templateDirInfo : templateDirInfoResult,
+      templateFilesInfo : templateFilesInfosResult,
+      templateConfigFile
+    }
+  }
+
+  private static findWantedTemplate(wantedTemplateName : string, templatesDirsInfo : ITemplateDirInfos[]) :  ITemplateDirInfos | Error {
+    const templateDirFound = templatesDirsInfo.find(tempDirInfo => this.getTemplateName(tempDirInfo.dirName)  === wantedTemplateName)
+    if(!templateDirFound)
+      return new Error(`Aucune template nommé "${wantedTemplateName}" n'as été trouvé`)
+    else
+      return templateDirFound
+
+  }
+
+  private static async getAllTemplateDirInfo() : Promise<ITemplateDirInfos[] | Error> {
+    try {
+      const globalDirConfigPath = path.resolve(nameConfigDir)
+      if(!fs.existsSync(globalDirConfigPath))
+        return new Error(`Problème ! Le répertoire global de configuration est manquant !`)
+
+      const result = await readdir(globalDirConfigPath, { withFileTypes: true })
+      const dirInfo = result
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => ( {
+          dirName : dirent.name,
+          dirPath :`${globalDirConfigPath}/${dirent.name}`
+        } ))
+      const checkingResult = this.checkAllTemplateDirInfo(dirInfo)
+
+      return checkingResult instanceof Error ? checkingResult : dirInfo
+
+    }
+    catch (err){
+      return new Error(`Une erreur innatendue s'est produite : ${err}`)
+    }
+  }
+
+  static async getAllTemplateFilesInfo(templateDirPath) : Promise<ITemplateFileInfo[] | Error > {
+    try {
+      const result = await readdir(templateDirPath, { withFileTypes: true })
+      return result
+        .filter(file => file.isFile() && file.name !== nameComponentConfigFile)
+        .map(file => ({
+          fileName : file.name,
+          filePath : `${templateDirPath}/${file.name}`,
+        }))
+    }
+    catch (err){
+      return new Error(`Une erreur innatendue s'est produite : ${err}`)
+    }
   }
 
   private static checkAllTemplateDirInfo(templatesDirInfos : ITemplateDirInfos[]) : void | Error {
@@ -60,7 +125,6 @@ export class TemplateReader implements ITemplateReader{
       else if(!templateDirNameParted || !templateDirNameParted[2])
         errors.push(`Problème sur le template ${templateDirName} : ${ERR_TEMPLATE_DIR_NAME_PART2}`)
     }
-
     if(errors.length){
       const textError = errors.join(`\n-----------------------------`)
       return new Error(textError)
@@ -69,75 +133,22 @@ export class TemplateReader implements ITemplateReader{
   }
 
 
-  private static getTemplateName(templateDirName) : string {
+  private static getTemplateName(templateDirName:string) : string {
     const templateDirNameParted = regexDirectory.exec(templateDirName) as RegExpExecArray
     return templateDirNameParted[1]
   }
 
 
-  static async getAllTemplateDirInfo() : Promise<ITemplateDirInfos[] | Error> {
-    try {
-      const globalDirConfigPath = path.resolve(nameConfigDir)
-      if(!fs.existsSync(globalDirConfigPath))
-        return new Error(`Problème ! Le répertoire global de configuration est manquant !`)
-
-      const result = await readdir(globalDirConfigPath, { withFileTypes: true })
-      const dirInfos = result
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => ( {
-          templateName : this.getTemplateName(dirent.name),
-          dirName : dirent.name,
-          dirPath :`${globalDirConfigPath}/${dirent.name}`
-        } ))
-      const checkingResult = this.checkAllTemplateDirInfo(dirInfos)
-
-      return checkingResult instanceof Error ? checkingResult : dirInfos
-
-    }
-    catch (err){
-      return new Error(`Une erreur innatendue s'est produite : ${err}`)
-    }
-  }
-
-
-  static getAllTemplateFilesInfo(templateDirPath) : ITemplateFileInfo[] {
-    const readDirResult = readdirSync(templateDirPath, { withFileTypes: true })
-    return  readDirResult
-      .filter(file => file.isFile() && file.name !== nameComponentConfigFile)
-      .map(file => ({
-        fileName : file.name,
-        filePath : `${templateDirPath}/${file.name}`,
-      }))
-  }
-
-
-  private getTemplateConfigFile() : IComponentConfigFile | null {
-    const templateDirPath = this.templateDirInfos.dirPath
+  private static getTemplateConfigFile(templateDirInfos : ITemplateDirInfos) : ITemplateConfigFile | null {
+    const templateDirPath = templateDirInfos.dirPath
     if(fs.existsSync(`${templateDirPath}/${nameComponentConfigFile}`)){
       const result = fs.readFileSync(path.resolve(`${templateDirPath}/${nameComponentConfigFile}`))
-      return JSON.parse(result.toString()) as IComponentConfigFile
+      return JSON.parse(result.toString()) as ITemplateConfigFile
     }
     else
-      console.log(`Infos : Aucun fichier de configuration n'as été fourni avec le template : ${this.templateDirInfos.dirName}`)
+      console.log(`Infos : Aucun fichier de configuration n'as été fourni avec le template : ${templateDirInfos.dirName}`)
     return null
   }
-
-  createComponentDirName(replaceValue : string) : string | Error {
-    const templateDirName = this.templateDirInfos.dirName
-    const templateDirNameParted = regexDirectory.exec(templateDirName)
-    if(!templateDirNameParted || !templateDirNameParted[2])
-      return new Error(`Problème sur le template ${templateDirName} : ${ERR_TEMPLATE_DIR_NAME_PART2}`)
-
-    return templateDirNameParted[2].replace(keywordReplacement, replaceValue)
-  }
-
-
-  createComponentFilesNames (replaceValue : string):  string[] | Error {
-    return this.templateFilesInfos.map(templateFileInfo =>
-      templateFileInfo.fileName.replace(keywordReplacement, replaceValue)
-    )
-  }
-
 
 }
 

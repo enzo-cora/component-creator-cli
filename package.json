@@ -2,7 +2,7 @@
   "name": "component-architect",
   "version": "1.0.0",
   "description": "Define and generate automatically your own custom component from CLI (like the angular CLI)",
-  "main": "app.js",
+  "main": "dist/app.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll",
@@ -37,7 +37,9 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "commander": "^8.3.0",
-    "conf": "^10.0.3"
+    "commander": "^8.3.0"
+  },
+  "bin": {
+    "comp": "dist/app.js"
   }
 }

@@ -1,3 +1,3 @@
 export interface IGlogalConfigFile {
-  globalWorkDir: string
+  domainWorkDirectory: string
 }

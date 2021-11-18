@@ -1,3 +1,4 @@
+/*
 import {ITemplateReader} from "./TemplateReader";
 
 type Path = string
@@ -39,3 +40,4 @@ export class ComponentDispatcher implements IComponentDispatcher{
   }
 
 }
+*/
