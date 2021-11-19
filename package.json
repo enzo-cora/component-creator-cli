@@ -36,6 +36,7 @@
   },
   "types": "dist/app.d.ts",
   "main": "dist/app.js",
+  "module": "dist/app.es.js",
   "bin": {
     "ccc": "dist/app.js"
   }
