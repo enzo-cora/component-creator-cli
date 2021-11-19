@@ -19,15 +19,15 @@ Description incomming ...
 | ![#f8f8f8](https://via.placeholder.com/10/e71837?text=+) | Not Implemented |
 
 
-- ![green](https://via.placeholder.com/10/00A000?text=+)`Create you own custom component`
-    - ![green](https://via.placeholder.com/10/00A000?text=+)`Define the files created by the component`
-    - ![red](https://via.placeholder.com/10/e71837?text=+)`Define the files content`
-- ![red](https://via.placeholder.com/10/e71837?text=+)`Delete created component`
-- ![red](https://via.placeholder.com/10/e71837?text=+)`List component`
-- ![red](https://via.placeholder.com/10/e71837?text=+)`Generate example component`
-- ![green](https://via.placeholder.com/10/00A000?text=+)`Configure component for targeted domain `
-- ![green](https://via.placeholder.com/10/00A000?text=+)`Configure component with flexibility subdomain`
-
+- ![green](https://via.placeholder.com/10/00A000?text=+) `Create you own custom component`
+    - ![green](https://via.placeholder.com/10/00A000?text=+) `Define the files created by the component`
+    - ![red](https://via.placeholder.com/10/e71837?text=+) `Define the files content`
+- ![red](https://via.placeholder.com/10/e71837?text=+) `Delete created component`
+- ![red](https://via.placeholder.com/10/e71837?text=+) `List component`
+- ![red](https://via.placeholder.com/10/e71837?text=+) `Generate example component`
+- ![green](https://via.placeholder.com/10/00A000?text=+) `Configure component for targeted domain `
+- ![green](https://via.placeholder.com/10/00A000?text=+) `Configure component with flexibility subdomain`
+- ![red](https://via.placeholder.com/10/e71837?text=+) `Choose formatting convention for auto-format each entities name`
 
 ## Demo
 
@@ -43,7 +43,7 @@ Gif incomming
    $ ccc create extravagant smartphone
 ```
 
-These commands will generate three components based on the "extravagant" template.  
+These commands will generate three components based on a custom "extravagant" template.  
 The creation location is configured upstream (in the [template config file](#template-config-file) on "`componentWorkDirectory`" field).  
 Here are the generated components :
 ```
@@ -87,18 +87,23 @@ For **run commands**, you will have to use
 
 ## CLI Reference
 
+### Definitions:
+  - **Template** : A template is a way of writing an entity with some information “left generic”, for the CLI to fill in later, when we actually use it.
+  - **Component** :  A component is built version of a template
+  
 ### Create component
 
 ```cmd
   $ ccc create <template-name> <replacement-value> [options]
 ```
+#### Arguments `create` :
 |      Argument     |  Type  |                                    Description                                   |
 |:-----------------:|:------:|:--------------------------------------------------------------------------------:|
-|   `<template-name>`   | `string` |                            **Required**. Nom du template à utiliser.                           |
-| `<replacement-value>` | `string` | **Required**. Replacement value used to replace the keyword between brackets (ex: [CamelCase]) |
+|   `<template-name>`   | `string` |                            **Required**. Name of template to use.                           |
+| `<replacement-value>` | `string` | **Required**. Replacement value used to replace the [generic keyword](#generics-keywords) in brackets |
 
-__
 
+#### Options `create`:
 |    Option   | Short |  Type  |                                    Description                                   | Default Value |
 |:-----------:|:-----:|:------:|:--------------------------------------------------------------------------------:|:-------------:|
 | `--subdomain` |   `-s`  | `string` | **Optional**. Name of subdomain placed between *main Domain* and *Component working directory* |      none     |
@@ -109,8 +114,26 @@ __
   $ ccc --help
 ```
 ## Configuration
+### Generics keywords
+The genereric keywords in brackets are recognized by the CLI and replaced by the [replacement value](#arguments-create-) provided.    
+The value contained between the brackets defines formatting name of the 
+- directory
+- file
+- class
+- variable
+- function 
+- ...
 
-### Config structure
+|      Keyword     |           Formatting                                   |
+|:-----------------:|:-----------------------------------:|
+|   `[raw]`      |     Don't apply formatting 
+|   `[camelCase]` |       Capitalizes the first letter of each word except the first one. |
+|   `[PascalCase]` |      Capitalizes the first letter of each word |
+|   `[snake_case]` |      Add a dash between each word and all of them are lowercase. |
+|   `[kebab-case]` |      Add an underscore between each word and all of them are lowercase. |
+
+### Structure : 
+#### Your project structure
 `my-app/`
 ```
 my-app/
@@ -123,29 +146,38 @@ my-app/
 ├─ ...
 
 ```
+The CLI configuration directory is mandatory and it must be created at the root of your project.
 
-
+#### CLI config directory structure
 `component-creator-config/`
 ```
 component-creator-config/
 ├─ config-component.json            ---> Main config file for CLI
-├─ myName@Prefix[CamelCase]Sufix/   ---> A custom template named "myName"
+├─ myName@Prefix[camelCase]Sufix/   ---> A custom template named "myName"
 │  ├─ ...
 │  │
 ├─ otherName@TheBest[snake_case]/   ---> Another custom template named "otherName"
 │  ├─ ...
 
 ```
+In this directory you will stored the global configuration file and your templates
 
-`myName@Prefix[CamelCase]Sufix`
+#### Template directory structure
+`myName@Prefix[camelCase]Sufix`
 ```
-myName@Prefix[CamelCase]Sufix/
+myName@Prefix[camelCase]Sufix/
 ├─ config-component.json            ---> (Falcultative) Component config file for CLI
-├─ Imple[CamelCase].ts
-├─ Interface[CamelCase].ts
-├─ test[CamelCase].test.ts
+├─ Imple[camelCase].ts
+├─ Interface[camelCase].ts
+├─ test[camelCase].test.ts
 ```
-On running `create` command  : The `[CamelCase]` keyword **will be replaced** by a replacement value
+
+
+- In directory name , "`@`" is a separator
+  - The name of the template is defined to the left of the separator. This name **should be unique**
+  - The future component directory name is defined to the right of the separator
+- The keyword "`[camelCase]`" belongs to a family of [generics keywords](#generics-keywords) in brackts.
+- On running `create` command  : Every `[camelCase]` keywords **will be replaced** by the [replacement value](#arguments-create)
 
 ### Global config file
 

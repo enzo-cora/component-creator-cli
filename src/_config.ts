@@ -3,7 +3,7 @@ import path from "path";
 import {IGlogalConfigFile} from "./_definitions/IGlogalConfigFile";
 
 
-export const keywordReplacement :string = "[CamelCase]"
+export const keywordReplacement :string = "[camelCase]"
 
 export const cliCommandName = "compo"
 export const separator :string = "@"
