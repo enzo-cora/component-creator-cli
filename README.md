@@ -36,7 +36,7 @@ Gif incomming
 
 ## Usage & Examples
 
-#### Create component
+### Create component
 ```cmd
    $ ccc create extravagant order
    $ ccc create extravagant user
@@ -110,11 +110,11 @@ __
 ```
 ## Configuration
 
-#### Config structure
+### Config structure
 `my-app/`
 ```
 my-app/
-├─ component-architect-config/              ---> Config directory for CLI
+├─ component-creator-config/              ---> Config directory for CLI
 │  ├─ ...
 |
 ├─ package.json
@@ -125,9 +125,9 @@ my-app/
 ```
 
 
-`component-architect-config/`
+`component-creator-config/`
 ```
-component-architect-config/
+component-creator-config/
 ├─ config-component.json            ---> Main config file for CLI
 ├─ myName@Prefix[CamelCase]Sufix/   ---> A custom template named "myName"
 │  ├─ ...
@@ -147,10 +147,35 @@ myName@Prefix[CamelCase]Sufix/
 ```
 On running `create` command  : The `[CamelCase]` keyword **will be replaced** by a replacement value
 
-#### Global config file
+### Global config file
+
+`config-global.json`
+The global configuration file is **mandatory**.  
+
+```json
+{
+  "domainWorkDirectory": "src/core"
+}
+```
+
+|      Field     |  Type  |                                    Description                                   |
+|:-----------------:|:------:|:--------------------------------------------------------------------------------:|
+|   `domainWorkDirectory`   | `string` |**Required**. It's used to define the root working directory of CLI |
 
 
-#### Template config file
+### Template config file
+`config-component.json` The template configuration file is **optional**.
+
+```json
+{
+  "componentWorkDirectory": "application/usecases"
+}
+```
+
+|      Field     |  Type  |                                    Description                                   |
+|:-----------------:|:------:|:--------------------------------------------------------------------------------:|
+|   `componentWorkDirectory`   | `string` |**Required**. It's used to set the component working directory ifrom the root directory. |
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)

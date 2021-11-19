@@ -9,7 +9,7 @@ export const cliCommandName = "compo"
 export const separator :string = "@"
 
 
-export const nameConfigDir :string = "component-architect-config"
+export const nameConfigDir :string = "component-creator-config"
 export const absolutePathConfigDir : string = path.resolve(nameConfigDir)
 
 export const nameGlobalConfigFile :string = "config-global.json"
