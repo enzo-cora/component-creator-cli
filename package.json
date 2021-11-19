@@ -11,11 +11,12 @@
     "type": "git",
     "url": "git+https://github.com/enzo-cora/component-creator-cli.git"
   },
-  "author": "enzo coratella",
+  "author": "enzo",
   "keywords": [
     "component",
     "creator",
     "generator",
+    "architecture",
     "cli",
     "domain-driven-design"
   ],
