@@ -34,7 +34,7 @@ const run = async ()=> {
 
   const preCheckResult = preChecking()
   if(preCheckResult instanceof Error)
-    console.log(preCheckResult.message)
+    return console.log(preCheckResult.message)
 
   const program = new Command()
 
