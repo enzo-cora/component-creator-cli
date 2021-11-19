@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import {
   ERR_TEMPLATE_DIR_NAME_PART2, JsonGlobalConfigFile,
-  keywordReplacement, nameComponentConfigFile, nameGlobalConfigFile,
+  keywordReplacement,
   regexDirectory
 } from "./_config";
 import {ITemplateFileInfo, ITemplateReader} from "./TemplateReader";
@@ -84,7 +84,7 @@ export class ComponentInfosGenerator implements IComponentInfosGenerator{
 
     if(subDomainName){
       subDomainAbsolutePath = `${domainRelativePath}/${subDomainName}`
-      if(!fs.existsSync(componentWrkDirAbsolutePath))
+      if(!fs.existsSync(subDomainAbsolutePath))
         return new Error(`Le sous-domaine "${subDomainName}" n'existe pas dans : \n ${path.relative(path.resolve(),domainAbsolutePath)}`)
     }
 

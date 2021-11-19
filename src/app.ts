@@ -49,7 +49,7 @@ const run = async ()=> {
     .command(CommandEnum.create)
     .argument('<templateName>',"Template to use")
     .argument('<replacementName>',"Replacement word")
-    .option('-s, --subdomain', 'Allwos to choose a subdomain in which the component will be created')
+    .option('-s, --subdomain <subdomain>', 'Allwos to choose a subdomain in which the component will be created')
     .description(`Create component`)
     .action(create)
 
@@ -58,12 +58,3 @@ const run = async ()=> {
 }
 
 run().then()
-
-
-
-
-/*
-create("entity","enzo").then(()=>{
-  console.log('fin')
-})
-*/

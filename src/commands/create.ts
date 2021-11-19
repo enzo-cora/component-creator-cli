@@ -3,11 +3,13 @@ import {ComponentInfosGenerator} from "../ComponentInfosGenerator";
 import {createComponent} from "../FilesHandlers/createComponent";
 
 export type ICreateCommand = (templateName:string, replaceValue:string, opts?: any) => Promise<void>
-
+export interface ICreateCommandOptions {
+  subdomain? : string
+}
 export const create : ICreateCommand = async (
   templateName:string,
   replaceValue:string,
-  opts: any
+  opts: ICreateCommandOptions
 )=>
 {
   const templateInfos  = await TemplateReader.build(templateName)
@@ -17,7 +19,8 @@ export const create : ICreateCommand = async (
 
   const componentInformations = ComponentInfosGenerator.build(
     templateInfos,
-    replaceValue
+    replaceValue,
+    opts?.subdomain
   )
 
   if (componentInformations instanceof Error)

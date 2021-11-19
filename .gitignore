@@ -1,5 +1,5 @@
 **/node_modules
 **/dist/**
 **/.idea
-component-architect-config
+dist/component-creator-config
 fakeWorkDir
