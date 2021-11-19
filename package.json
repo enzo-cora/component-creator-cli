@@ -1,13 +1,12 @@
 {
   "name": "component-creator-cli",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Define and generate automatically your own custom component from CLI (like the angular CLI)",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "version": "npm run build",
     "postversion": "git push origin master",
     "postpublish": "git push --tags",
-
     "start": "node dist/app.js",
     "dev": "nodemon"
   },
