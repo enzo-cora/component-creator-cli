@@ -8,10 +8,20 @@
 ![Issues](https://img.shields.io/github/issues/enzo-cora/component-creator-cli.svg)
 [![Licence](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 
-Description incomming ...
+Are you interested in the **architecture of your project**?
+Do you do Domain Driven Design (DDD), Clean Architecture, React or simply MVC?  
+If YES, then you will probably create a project with repeating components that will have the same file structure.
+And you will reuse these paterns throughout the construction of your project architecture. (And even after) !
+
+Therefore, in order to save time on the creation of your architecture and improve your workflow, you can use "Component creator CLI" to generate your personalized components in 1 second! (via the command line)
+
+**1- Create your custom generic component models (template)     
+2- And run the cli `create` command to generate your components at the chosen locations.**
+
+(It's like the Angular CLI, with your own custom components !)
 
 
-## CLI Features
+## I- CLI Features
 
 | #                                                        | Meaning         |
 |----------------------------------------------------------|-----------------|
@@ -20,8 +30,8 @@ Description incomming ...
 
 
 - ![green](https://via.placeholder.com/10/00A000?text=+) `Create you own custom component`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Define the files created by the component`
-    - ![red](https://via.placeholder.com/10/e71837?text=+) `Define the files content`
+  - ![green](https://via.placeholder.com/10/00A000?text=+) `Define the files created by the component`
+  - ![red](https://via.placeholder.com/10/e71837?text=+) `Define the files content`
 - ![red](https://via.placeholder.com/10/e71837?text=+) `Delete created component`
 - ![red](https://via.placeholder.com/10/e71837?text=+) `List component`
 - ![red](https://via.placeholder.com/10/e71837?text=+) `Generate example component`
@@ -29,14 +39,14 @@ Description incomming ...
 - ![green](https://via.placeholder.com/10/00A000?text=+) `Configure component with flexibility subdomain`
 - ![red](https://via.placeholder.com/10/e71837?text=+) `Choose formatting convention for auto-format each entities name`
 
-## Demo
+## II- Demo
 
 Gif incomming
 ![Demo animation cli](../images/create-component.png?raw=true)
 
-## Usage & Examples
+## III- Usage & Examples
 
-### Create component
+### A- Create component
 ```cmd
    $ ccc create extravagant order
    $ ccc create extravagant user
@@ -44,7 +54,7 @@ Gif incomming
 ```
 
 These commands will generate three components based on a custom "extravagant" template.  
-The creation location is configured upstream (in the [template config file](#template-config-file) on "`componentWorkDirectory`" field).  
+The creation location is configured upstream (in the [template config file](#d--template-config-file) on "`componentWorkDirectory`" field).  
 Here are the generated components :
 ```
 FancifulEntities/
@@ -71,7 +81,7 @@ FancifulEntities/
 
 ```
 To change the default creation location you can use the `--subdomain` option
-## Installation
+## IV- Installation
 
 Install `component-creator-cli` with npm as dev-dependency
 
@@ -85,13 +95,13 @@ For **run commands**, you will have to use
 
 
 
-## CLI Reference
+## V- CLI Reference
 
-### Definitions:
-  - **Template** : A template is a way of writing an entity with some information “left generic”, for the CLI to fill in later, when we actually use it.
-  - **Component** :  A component is built version of a template
-  
-### Create component
+### A- Definitions:
+- **Template** : A template is a way of writing an entity with some information “left generic”, for the CLI to fill in later, when we actually use it.
+- **Component** :  A component is built version of a template
+
+### B- Create component
 
 ```cmd
   $ ccc create <template-name> <replacement-value> [options]
@@ -100,7 +110,7 @@ For **run commands**, you will have to use
 |      Argument     |  Type  |                                    Description                                   |
 |:-----------------:|:------:|:--------------------------------------------------------------------------------:|
 |   `<template-name>`   | `string` |                            **Required**. Name of template to use.                           |
-| `<replacement-value>` | `string` | **Required**. Replacement value used to replace the [generic keyword](#generics-keywords) in brackets |
+| `<replacement-value>` | `string` | **Required**. Replacement value used to replace the [generic keyword](#a--generics-keywords) in brackets |
 
 
 #### Options `create`:
@@ -113,26 +123,26 @@ For **run commands**, you will have to use
 ```cmd
   $ ccc --help
 ```
-## Configuration
-### Generics keywords
+## VI- Configuration
+### A- Generics keywords
 The genereric keywords in brackets are recognized by the CLI and replaced by the [replacement value](#arguments-create-) provided.    
-The value contained between the brackets defines formatting name of the 
+The value contained between the brackets defines formatting name of the
 - directory
 - file
 - class
 - variable
-- function 
+- function
 - ...
 
 |      Keyword     |           Formatting                                   |
 |:-----------------:|:-----------------------------------:|
-|   `[raw]`      |     Don't apply formatting 
+|   `[raw]`      |     Don't apply formatting
 |   `[camelCase]` |       Capitalizes the first letter of each word except the first one. |
 |   `[PascalCase]` |      Capitalizes the first letter of each word |
 |   `[snake_case]` |      Add a dash between each word and all of them are lowercase. |
 |   `[kebab-case]` |      Add an underscore between each word and all of them are lowercase. |
 
-### Structure : 
+### B- Structure :
 #### Your project structure
 `my-app/`
 ```
@@ -176,13 +186,13 @@ myName@Prefix[camelCase]Sufix/
 - In directory name , "`@`" is a separator
   - The name of the template is defined to the left of the separator. This name **should be unique**
   - The future component directory name is defined to the right of the separator
-- The keyword "`[camelCase]`" belongs to a family of [generics keywords](#generics-keywords) in brackts.
+- The keyword "`[camelCase]`" belongs to a family of [generics keywords](#a--generics-keywords) in brackts.
 - On running `create` command  : Every `[camelCase]` keywords **will be replaced** by the [replacement value](#arguments-create-)
 
-### Global config file
+### C- Global config file
 
 `config-global.json`
-The global configuration file is **mandatory**.  
+The global configuration file is **mandatory**.
 
 ```json
 {
@@ -195,7 +205,7 @@ The global configuration file is **mandatory**.
 |   `domainWorkDirectory`   | `string` |**Required**. It's used to define the root working directory of CLI |
 
 
-### Template config file
+### D- Template config file
 `config-component.json` The template configuration file is **optional**.
 
 ```json
@@ -208,11 +218,8 @@ The global configuration file is **mandatory**.
 |:-----------------:|:------:|:--------------------------------------------------------------------------------:|
 |   `componentWorkDirectory`   | `string` |**Required**. It's used to set the component working directory ifrom the root directory. |
 
-## License
+## VII- License & Author
 
-[MIT](https://choosealicense.com/licenses/mit/)
+Lience : [MIT](https://choosealicense.com/licenses/mit/)
 
-
-## Author
-
-[@enzo-cora](https://www.github.com/enzo-cora)
+Author : [@enzo-cora](https://www.github.com/enzo-cora)
