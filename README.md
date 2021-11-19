@@ -177,7 +177,7 @@ myName@Prefix[camelCase]Sufix/
   - The name of the template is defined to the left of the separator. This name **should be unique**
   - The future component directory name is defined to the right of the separator
 - The keyword "`[camelCase]`" belongs to a family of [generics keywords](#generics-keywords) in brackts.
-- On running `create` command  : Every `[camelCase]` keywords **will be replaced** by the [replacement value](#arguments-create)
+- On running `create` command  : Every `[camelCase]` keywords **will be replaced** by the [replacement value](#arguments-create-)
 
 ### Global config file
 
