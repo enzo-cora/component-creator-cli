@@ -142,6 +142,8 @@ The value contained between the brackets defines formatting name of the
 |   `[snake_case]` |      Add a dash between each word and all of them are lowercase. |
 |   `[kebab-case]` |      Add an underscore between each word and all of them are lowercase. |
 
+**Warning ! Actually only `raw` is implemented**
+
 ### B- Structure :
 #### Your project structure
 `my-app/`

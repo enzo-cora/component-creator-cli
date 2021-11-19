@@ -1,9 +1,10 @@
 import fs from "fs"
 import path from "path";
 import {IGlogalConfigFile} from "./_definitions/IGlogalConfigFile";
+import {INamingConvention} from "./_definitions/INamingConvention";
 
 
-export const keywordReplacement :string = "[camelCase]"
+export const keywordReplacement : `[${INamingConvention}]` = "[raw]"
 
 export const cliCommandName = "compo"
 export const separator :string = "@"

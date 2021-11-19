@@ -1,1 +1,1 @@
-export type INamingConvention = 'camelCase' | "PascalCase" | "snake_case" | "kebab-case"
+export type INamingConvention = 'raw' | 'camelCase' | "PascalCase" | "snake_case" | "kebab-case"
