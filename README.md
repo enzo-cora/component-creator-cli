@@ -32,6 +32,7 @@ Description incomming ...
 ## Demo
 
 Gif incomming
+![Demo animation cli](../images/create-component.png?raw=true)
 
 ## Usage & Examples
 
