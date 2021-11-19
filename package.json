@@ -5,8 +5,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "version": "npm run build",
-    "postversion": "git push origin master",
-    "postpublish": "git push --tags",
+    "postversion": "git push origin master --follow-tags",
     "start": "node dist/app.js",
     "dev": "nodemon"
   },
@@ -15,6 +14,7 @@
     "url": "git+https://github.com/enzo-cora/component-creator-cli.git"
   },
   "author": "enzo",
+  "files": ["dist"],
   "keywords": [
     "component",
     "creator",
