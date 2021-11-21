@@ -32,54 +32,59 @@ class TemplateRepository implements ITemplateRepository{
     let metadataResult = this._getTemplateMetadata(templateName)
 
     if(metadataResult instanceof TEMPLATE_NOT_FOUND){
-
-      const reloadResult = await initializer.reload()
+      const reloadResult = await this._reloadCLI(templateName)
       if(reloadResult instanceof Error)
         return reloadResult
-      metadataResult = this._getTemplateMetadata(templateName)
-      if(metadataResult instanceof Error)
-        return metadataResult
-      const consistencyResult = this.checkTemplateConsistency(
+
+      return reloadResult
+    }
+    else if(metadataResult instanceof Error)
+      return metadataResult
+
+    else {
+      const consistencyResult = this._checkTemplateConsistency(
         templateName,
         metadataResult.configFile
       )
       if(consistencyResult instanceof Error)
         return consistencyResult
-
-      return metadataResult as ITemplateMetadata
-    }
-
-    else if(!(metadataResult instanceof Error)){
-      const consistencyResult = await this.checkTemplateConsistency(
-        templateName,
-        metadataResult.configFile
-      )
-      if(consistencyResult)
+      else if(consistencyResult === true)
         return metadataResult
-      const reloadResult = await initializer.reload()
+
+      const reloadResult = await this._reloadCLI(templateName)
       if(reloadResult instanceof Error)
         return reloadResult
-      metadataResult = this._getTemplateMetadata(templateName)
-      if(metadataResult instanceof Error)
-        return metadataResult
 
-      return metadataResult as ITemplateMetadata
+      return reloadResult
     }
 
-    else
-      return metadataResult as Error
   }
 
-  private checkTemplateConsistency(cacheTempName:string, configFile:ITemplateConfigFile) : true | Error {
+  private async _reloadCLI(templateName) : Promise<Error|ITemplateMetadata>{
+    const reloadResult = await initializer.reload()
+    if(reloadResult instanceof Error)
+      return reloadResult
+    const metadataResult = this._getTemplateMetadata(templateName)
+    if(metadataResult instanceof Error)
+      return metadataResult
+    const consistencyResult = this._checkTemplateConsistency(
+      templateName,
+      metadataResult.configFile
+    )
+    if(consistencyResult instanceof Error)
+      return consistencyResult
+    else if (consistencyResult === false)
+      return new Error(ErroMsgs.CACHE_UNEXPECTED_NOREFRESH)
 
+    return metadataResult
+  }
+
+
+  private _checkTemplateConsistency(cacheTempName:string, configFile:ITemplateConfigFile) : boolean | Error {
     const checkingResult = TemplateReader.checkConfigFileProperties(configFile)
     if(checkingResult instanceof Error)
       return checkingResult
-
-    if(configFile.template === cacheTempName)
-      return true
-
-    return new Error(ErroMsgs.TEMPLATE_NOT_EXIST(cacheTempName))
+    return configFile.template === cacheTempName
   }
 
   private _getTemplateMetadata(templateName) : ITemplateMetadata | Error {

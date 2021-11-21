@@ -24,7 +24,7 @@ class Initializer implements IInitializeCommand {
   async reload(showMsg = false) : Promise<Error | void> {
    try {
      const configDirPath = path.resolve(nameConfigDir)
-     Initializer.initConfigDir(configDirPath)
+     await Initializer.initConfigDir(configDirPath)
      const result = await readdir(configDirPath,{ withFileTypes: true })
      const templates : ITemplateDirInfos[] = result
        .filter(dirent => dirent.isDirectory())
@@ -51,11 +51,11 @@ class Initializer implements IInitializeCommand {
   }
 
 
-  private static initConfigDir(mkdirPath : string) : void{
+  private static async initConfigDir(mkdirPath : string) : Promise<void>{
     if(fs.existsSync(mkdirPath))
      return
     fs.mkdirSync(mkdirPath)
-    this.initExempleTemplate()
+    await this.initExempleTemplate()
   }
 
   private static initTemplate(templateDirInfo : ITemplateDirInfos) : Error | void{
@@ -70,7 +70,7 @@ class Initializer implements IInitializeCommand {
     TemplateRepo.saveTemplate(configFileResult.template,templateDirInfo.dirPath)
   }
 
-  private static initExempleTemplate(){
+  private static async initExempleTemplate(){
     try {
       const configDirPath = path.resolve(nameConfigDir)
       const exampleTemplate : IExampleTemplate =  {
@@ -90,7 +90,7 @@ class Initializer implements IInitializeCommand {
           {fileName : `LastOne${keywordExemple}.php`,data : ""},
         ]}
 
-      fileHandler(
+      await fileHandler(
         configDirPath,
         exampleTemplate.dirName,
         exampleTemplate.files

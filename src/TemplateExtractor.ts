@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import {
   edging,
-  keywordExemple,
 } from "./_constantes/config";
 
 import path from "path";

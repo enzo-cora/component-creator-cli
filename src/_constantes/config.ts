@@ -5,7 +5,7 @@ export const edging = "$"
 
 export const keywordExemple = `${edging}${NamingConvention.raw}${edging}`
 
-export const cliKeyword : string = "ccc"
+export const CLIAccess : string = "ccc"
 
 export const nameConfigDir :string = "component-cli-config"
 export const nameConfigFile:string = "template-config.json"

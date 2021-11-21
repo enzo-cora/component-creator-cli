@@ -12,8 +12,11 @@ export class TemplateReader implements ITemplateReader{
   static getTemplateConfigFile(templatePath) : Error | ITemplateConfigFile {
     const configFilePath = `${templatePath}/${nameConfigFile}`
     try {
-      if (!fs.existsSync(configFilePath))
-        return new Error(ErroMsgs.CONFIG_FIlE_MISS(templatePath))
+      if (!fs.existsSync(configFilePath)){
+        const matchResult = templatePath.match(/([^\/]*)\/*$/) as Array<string>
+        return new Error(ErroMsgs.CONFIG_FIlE_MISS(matchResult[1]))
+      }
+
 
       const fileBuffer = fs.readFileSync(path.resolve(configFilePath))
       return JSON.parse(fileBuffer.toString()) as ITemplateConfigFile
@@ -26,21 +29,27 @@ export class TemplateReader implements ITemplateReader{
 
   static checkConfigFileProperties(configFile:ITemplateConfigFile) : void | Error {
 
-    const errors : string[] = []
-    if(!configFile.template)
-      errors.push(ErroMsgs.CONFIG_FILE_INVALID('template',"string"))
-    else if(!configFile.componentWorkDir)
-      errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir',"string || Object "))
-    else if(typeof configFile.componentWorkDir === "object"){
-      if(!configFile.componentWorkDir.extensionWorkDir)
-        errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir.extensionWorkDir',"string"))
-      else if(!configFile.componentWorkDir.extensionWorkDir)
-        errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir.extensionWorkDir',"string"))
-    }
+    const errors: string[] = []
+    if (!configFile.template)
+      errors.push(ErroMsgs.CONFIG_FILE_INVALID('template', "string(min: 1 char)"))
+    else if (typeof (configFile.template) !== "string")
+      configFile.template
 
-    if(errors.length)
+    if (!configFile.componentWorkDir)
+      errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir', "string(min: 1 char) | Object "))
+
+    if (typeof configFile.componentWorkDir === "object") {
+      if (!configFile.componentWorkDir.rootWorkDir || typeof configFile.componentWorkDir.rootWorkDir !== "string")
+        errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir.rootWorkDir', "string(min: 1 char)"))
+      if (!configFile.componentWorkDir.hasOwnProperty("extensionWorkDir") || typeof configFile.componentWorkDir.extensionWorkDir !== "string")
+        errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir.extensionWorkDir', "string(min: 0 char)"))
+    } else if (typeof configFile.componentWorkDir !== "string")
+      errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir', "string(min: 1 char) | Object "))
+
+    if (errors.length)
       return new Error(errors.join("\n"))
   }
+
 
   public templateDirName: string
   constructor(
