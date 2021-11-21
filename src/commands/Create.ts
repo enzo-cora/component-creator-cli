@@ -40,7 +40,7 @@ export const create : ICreateCommand = async (
     return console.log(componentFilesResult.message)
 
   const componentDirName = componentInfos.getComponentDirName()
-  const componentCreation = fileHandler(
+  const componentCreation =  await fileHandler(
     componentWrkPathResult,
     componentDirName,
     componentFilesResult,
