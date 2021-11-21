@@ -3,12 +3,13 @@ import {TemplateExtractor} from "../TemplateExtractor";
 import {fileHandler} from "../FileHandler";
 import {TemplateRepo} from "../TemplateRepository";
 import {ITemplateReader} from "../_definitions/ITemplateReader";
+import {InfoMsgs} from "../_constantes/InfoMsgs";
 
 export type ICreateCommand = (templateName:string, replaceValue:string, opts?: any) => Promise<void>
 export interface ICreateCommandOptions {
   subdomain? : string
 }
-export const create : ICreateCommand = async (
+export const generate : ICreateCommand = async (
   templateName:string,
   replaceValue:string,
   opts: ICreateCommandOptions
@@ -51,7 +52,7 @@ export const create : ICreateCommand = async (
   else
     console.log(componentCreation)
 
-  console.log("Le composant à été créer avec succès")
+  console.log(InfoMsgs.SUCCESS_COMPONENT_CREATON)
 }
 
 

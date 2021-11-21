@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import {nameConfigFile} from "./_config";
+import {nameConfigFile} from "./_constantes/config";
 import {readdir} from "fs/promises";
 import {ITemplateFileInfo, ITemplateReader} from "./_definitions/ITemplateReader";
-import {ErrorList} from "./ErrorList";
+import {ErroMsgs} from "./_constantes/ErroMsgs";
 import {ITemplateConfigFile} from "./_definitions/ITemplateConfigFile";
 
 export class TemplateReader implements ITemplateReader{
@@ -13,13 +13,13 @@ export class TemplateReader implements ITemplateReader{
     const configFilePath = `${templatePath}/${nameConfigFile}`
     try {
       if (!fs.existsSync(configFilePath))
-        return new Error(ErrorList.CONFIG_FIlE_MISS(templatePath))
+        return new Error(ErroMsgs.CONFIG_FIlE_MISS(templatePath))
 
       const fileBuffer = fs.readFileSync(path.resolve(configFilePath))
       return JSON.parse(fileBuffer.toString()) as ITemplateConfigFile
     }
     catch (err){
-      return new Error(ErrorList.UNEXPECTED_ERROR(err))
+      return new Error(ErroMsgs.UNEXPECTED_ERROR(err))
     }
   }
 
@@ -28,14 +28,14 @@ export class TemplateReader implements ITemplateReader{
 
     const errors : string[] = []
     if(!configFile.template)
-      errors.push(ErrorList.CONFIG_FILE_INVALID('template',"string"))
+      errors.push(ErroMsgs.CONFIG_FILE_INVALID('template',"string"))
     else if(!configFile.componentWorkDir)
-      errors.push(ErrorList.CONFIG_FILE_INVALID('componentWorkDir',"string || Object "))
+      errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir',"string || Object "))
     else if(typeof configFile.componentWorkDir === "object"){
       if(!configFile.componentWorkDir.extensionWorkDir)
-        errors.push(ErrorList.CONFIG_FILE_INVALID('componentWorkDir.extensionWorkDir',"string"))
+        errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir.extensionWorkDir',"string"))
       else if(!configFile.componentWorkDir.extensionWorkDir)
-        errors.push(ErrorList.CONFIG_FILE_INVALID('componentWorkDir.extensionWorkDir',"string"))
+        errors.push(ErroMsgs.CONFIG_FILE_INVALID('componentWorkDir.extensionWorkDir',"string"))
     }
 
     if(errors.length)
@@ -47,7 +47,7 @@ export class TemplateReader implements ITemplateReader{
     public templateName: string,
     public templatePath: string,
   ) {
-    const matchResult = templateName.match(/([^\/]*)\/*$/) as Array<string>
+    const matchResult = templatePath.match(/([^\/]*)\/*$/) as Array<string>
     this.templateDirName = matchResult[1]
   }
 
@@ -57,15 +57,20 @@ export class TemplateReader implements ITemplateReader{
   async getTemplateFiles() : Promise<Error |ITemplateFileInfo[]> {
     try {
       const result = await readdir(this.templatePath, { withFileTypes: true })
-      return result
-        .filter(file => file.isFile() && file.name !== nameConfigFile)
-        .map(file => ({
+      const files = result.filter(file => file.isFile() && file.name !== nameConfigFile)
+
+      return files.map(file => {
+        const filePath = `${this.templatePath}/${file.name}`
+        const fileBuffer = fs.readFileSync(path.resolve(filePath))
+        return {
           fileName : file.name,
-          filePath : `${this.templatePath}/${file.name}`,
-        }))
+          filePath,
+          fileData :  fileBuffer.toString()
+        }
+        })
     }
     catch (err){
-      return new Error(ErrorList.UNEXPECTED_ERROR(err))
+      return new Error(ErroMsgs.UNEXPECTED_ERROR(err))
     }
   }
 

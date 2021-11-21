@@ -1,8 +1,8 @@
 import path from "path";
-import {nameConfigDir, nameConfigFile} from "./_config";
+import {nameConfigDir, nameConfigFile} from "./config";
 
 
-export const ErrorList = {
+export const ErroMsgs = {
   UNEXPECTED_ERROR :(err) => "Une erreur inattendue s'est produite : \n" + err,
   CONFIG_DIR_MISS : `Le dossier de configuration ${nameConfigDir} n'as pas été trouvé ! \n Il doit être placé à la racine de votre projet`,
   CONFIG_FIlE_MISS : (templatePath)=>`Vous devez ajouter un fichier de configuration "${nameConfigFile}" au template ${templatePath}`,
@@ -13,5 +13,8 @@ export const ErrorList = {
   EXTENTION_WRK_DIR_NOT_EXISTE : (extPath:string, subPath:string) => `L'extention "${extPath}" n'existe pas dans le sous-domaine "${subPath}". \n Vous devez fournir une extention valide pour la création de votre composant`,
   // REPLACEMENT_FORMATAGE_NOT_EXIST : "",
   CONFIG_FILE_INVALID : (pty, type)=> `Le fichier de configuration doit contenir la pté "${pty}" de type ${type}`,
-  COMPONENT_ALREADY_EXIST : (dirName, wrkPath)=>  `Impossible de créer le composant "${dirName}" à l'emplacement "${wrkPath}" car un composant du même nom existe déjà à cet emplacement`
+  COMPONENT_ALREADY_EXIST : (dirName, wrkPath)=>  `Impossible de créer le composant "${dirName}" à l'emplacement "${wrkPath}" car un composant du même nom existe déjà à cet emplacement`,
+  FILE_CREATION_UNEXPECTRED_ERR : (fileName, err)=>  `Une erreur s'est produite pendant la création du fichier "${fileName}" : \n ${err}`,
+  DIRECTORY_CREATION_UNEXPECTRED_ERR : (dirName, err)=>  `Une erreur s'est produite pendant la création du répertoire "${dirName}" : \n ${err}`,
+  EXAMPLE_TEMPLATE_CREATION_UNEXPECTRED_ERR :   "OOPS ! Impossible de générer le template d'exemple !",
 }

@@ -10,13 +10,13 @@
 
 Are you interested in the **architecture of your project**?
 Do you do Domain Driven Design (DDD), Clean Architecture, React or simply MVC?  
-If YES, then you will probably create a project with repeating components that will have the same file structure.
+If YES, then you will probably generate a project with repeating components that will have the same file structure.
 And you will reuse these paterns throughout the construction of your project architecture. (And even after) !
 
 Therefore, in order to save time on the creation of your architecture and improve your workflow, you can use "Component creator CLI" to generate your personalized components in 1 second! (via the command line)
 
 **1- Create your custom generic component models (template)     
-2- And run the cli `create` command to generate your components at the chosen locations.**
+2- And run the cli `generate` command to generate your components at the chosen locations.**
 
 (It's like the Angular CLI, with your own custom components !)
 
@@ -48,9 +48,9 @@ Gif incomming
 
 ### A- Create component
 ```cmd
-   $ ccc create extravagant order
-   $ ccc create extravagant user
-   $ ccc create extravagant smartphone
+   $ ccc generate extravagant order
+   $ ccc generate extravagant user
+   $ ccc generate extravagant smartphone
 ```
 
 These commands will generate three components based on a custom "extravagant" template.  
@@ -104,16 +104,16 @@ For **run commands**, you will have to use
 ### B- Create component
 
 ```cmd
-  $ ccc create <template-name> <replacement-value> [options]
+  $ ccc generate <template-name> <replacement-value> [options]
 ```
-#### Arguments `create` :
+#### Arguments `generate` :
 |      Argument     |  Type  |                                    Description                                   |
 |:-----------------:|:------:|:--------------------------------------------------------------------------------:|
 |   `<template-name>`   | `string` |                            **Required**. Name of template to use.                           |
 | `<replacement-value>` | `string` | **Required**. Replacement value used to replace the [generic keyword](#a--generics-keywords) in brackets |
 
 
-#### Options `create`:
+#### Options `generate`:
 |    Option   | Short |  Type  |                                    Description                                   | Default Value |
 |:-----------:|:-----:|:------:|:--------------------------------------------------------------------------------:|:-------------:|
 | `--subdomain` |   `-s`  | `string` | **Optional**. Name of subdomain placed between *main Domain* and *Component working directory* |      none     |
@@ -189,7 +189,7 @@ myName@Prefix[camelCase]Sufix/
   - The name of the template is defined to the left of the separator. This name **should be unique**
   - The future component directory name is defined to the right of the separator
 - The keyword "`[camelCase]`" belongs to a family of [generics keywords](#a--generics-keywords) in brackts.
-- On running `create` command  : Every `[camelCase]` keywords **will be replaced** by the [replacement value](#arguments-create-)
+- On running `generate` command  : Every `[camelCase]` keywords **will be replaced** by the [replacement value](#arguments-create-)
 
 ### C- Global config file
 

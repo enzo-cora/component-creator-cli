@@ -1,6 +1,6 @@
 import {ITemplateMetadata, ITemplateRepository} from "./_definitions/ITemplateRepository";
 import {TemplateReader} from "./TemplateReader";
-import {ErrorList} from "./ErrorList";
+import {ErroMsgs} from "./_constantes/ErroMsgs";
 import Conf from "conf";
 import {initializer} from "./commands/Initialize";
 import {ITemplateConfigFile} from "./_definitions/ITemplateConfigFile";
@@ -79,13 +79,13 @@ class TemplateRepository implements ITemplateRepository{
     if(configFile.template === cacheTempName)
       return true
 
-    return new Error(ErrorList.TEMPLATE_NOT_EXIST(cacheTempName))
+    return new Error(ErroMsgs.TEMPLATE_NOT_EXIST(cacheTempName))
   }
 
   private _getTemplateMetadata(templateName) : ITemplateMetadata | Error {
     const path = this.Store.get(templateName) as string
     if(!path)
-      return new TEMPLATE_NOT_FOUND(ErrorList.TEMPLATE_NOT_EXIST(templateName))
+      return new TEMPLATE_NOT_FOUND(ErroMsgs.TEMPLATE_NOT_EXIST(templateName))
     const configFileResult = TemplateReader.getTemplateConfigFile(path)
     if(configFileResult instanceof Error)
       return configFileResult

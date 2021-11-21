@@ -1,7 +1,8 @@
 import * as fs from "fs";
 import path from "path";
-import {ErrorList} from "./ErrorList";
+import {ErroMsgs} from "./_constantes/ErroMsgs";
 import {IComponentFileInfo} from "./_definitions/ITemplateExtractor";
+import {InfoMsgs} from "./_constantes/InfoMsgs";
 
 
 
@@ -12,32 +13,37 @@ export const fileHandler : IComponentCreator = async (
   compDrirName,
   componentFiles
 )=> {
+
+  const mkdirPath = `${compWrkDir}/${compDrirName}`
+
+  if(  fs.existsSync(mkdirPath))
+    return new Error(ErroMsgs.COMPONENT_ALREADY_EXIST(compDrirName, path.relative(path.resolve(),mkdirPath) ))
+
   try {
-    const mkdirPath = `${compWrkDir}/${compDrirName}`
+    fs.mkdirSync(mkdirPath)
+  }
+  catch (err){
+    if(err instanceof Error)
+      return new Error(ErroMsgs.DIRECTORY_CREATION_UNEXPECTRED_ERR(compDrirName,err.message ))
+    else
+      return new Error(ErroMsgs.DIRECTORY_CREATION_UNEXPECTRED_ERR(compDrirName,err))
 
-    if(  fs.existsSync(mkdirPath))
-      throw new Error(ErrorList.COMPONENT_ALREADY_EXIST(compDrirName, path.relative(path.resolve(),mkdirPath) ))
+  }
 
-    fs.mkdir(mkdirPath,err=> {
-      if (err) throw new Error(`Une erreur est survenue lors de la création du répertoire : \n ${err.message}`)
-    })
 
-    const successLogs : string[] = []
-    for(const file of componentFiles){
-      fs.appendFile(
-        `${mkdirPath}/${file.fileName}`,file.data, (err)=>{
-          if (err) throw new Error(`Une erreur c'est produite pendant la création du fichier "${file.fileName}" : \n ${err}` )
-      })
-      successLogs.push(`Fichier ${file.fileName} : Création OK`)
-    }
+  try {
+    const successLogs:string[] = await Promise.all(componentFiles.map(async (file)=> {
+      await fs.promises.appendFile(`${mkdirPath}/${file.fileName}`,file.data)
+      return InfoMsgs.SUCCESS_FILE_CREATON(file.fileName)
+    }))
     return successLogs.join("\n")
   }
   catch (err){
     if(err instanceof Error)
-      return err
+      return new Error(ErroMsgs.FILE_CREATION_UNEXPECTRED_ERR(compDrirName,err.message ))
     else
-      return new Error(ErrorList.UNEXPECTED_ERROR(err))
-
+      return new Error(ErroMsgs.FILE_CREATION_UNEXPECTRED_ERR(compDrirName,err))
   }
+
 
 }

@@ -5,7 +5,8 @@ export type ITemplateDirInfos = {
 
 export type ITemplateFileInfo = {
   fileName : string,
-  filePath : string
+  filePath : string,
+  fileData : string
 }
 
 

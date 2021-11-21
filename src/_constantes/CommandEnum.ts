@@ -1,5 +1,6 @@
 export enum CommandEnum {
-  create = "create",
+  generate = "generate",
+  generateShortcut = "g",
   init = "init",
   delete = "create",
   list = "list",

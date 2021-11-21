@@ -1,7 +1,9 @@
 import chalk from "chalk";
+import {NamingConvention} from "./NamingConvention";
 
-export const framingSymbol = "$"
-export const genericKeyword = `${framingSymbol}raw${framingSymbol}`
+export const edging = "$"
+
+export const keywordExemple = `${edging}${NamingConvention.raw}${edging}`
 
 export const cliKeyword : string = "ccc"
 

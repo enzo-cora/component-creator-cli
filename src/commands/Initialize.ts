@@ -1,5 +1,5 @@
 import fs from "fs";
-import {genericKeyword, nameConfigDir, nameConfigFile} from "../_config";
+import {keywordExemple, nameConfigDir, nameConfigFile} from "../_constantes/config";
 import path from "path";
 import {readdir} from "fs/promises";
 import {ITemplateDirInfos} from "../_definitions/ITemplateReader";
@@ -8,7 +8,8 @@ import {TemplateReader} from "../TemplateReader";
 import {TemplateRepo} from "../TemplateRepository";
 import {IComponentFileInfo} from "../_definitions/ITemplateExtractor";
 import {fileHandler} from "../FileHandler";
-import {ErrorList} from "../ErrorList";
+import {ErroMsgs} from "../_constantes/ErroMsgs";
+import {InfoMsgs} from "../_constantes/InfoMsgs";
 
 type IExampleTemplate = {
   dirName : string,
@@ -40,12 +41,12 @@ class Initializer implements IInitializeCommand {
        return new Error(errors.join("\n"))
 
      if (showMsg)
-       console.log('Initialisation effectuée avec succès')
+       console.log(InfoMsgs.SUCCESS_INITIALIZATION)
      else
-       console.log('Reload OK')
+       console.log(InfoMsgs.SUCCESS_RELOAD)
    }
    catch (err){
-     console.log(ErrorList.UNEXPECTED_ERROR(err))
+     console.log(ErroMsgs.UNEXPECTED_ERROR(err))
    }
   }
 
@@ -73,9 +74,9 @@ class Initializer implements IInitializeCommand {
     try {
       const configDirPath = path.resolve(nameConfigDir)
       const exampleTemplate : IExampleTemplate =  {
-        dirName : `Exemple${genericKeyword}Template`,
+        dirName : `Exemple${keywordExemple}Template`,
         files : [
-          {fileName : `My${genericKeyword}Exemple.jsx`,data : ""},
+          {fileName : `My${keywordExemple}Exemple.jsx`,data : ""},
           {fileName : `${nameConfigFile}`,data :
               `
 {
@@ -84,9 +85,9 @@ class Initializer implements IInitializeCommand {
 }
               `
           },
-          {fileName : `The${genericKeyword}Amazing.css`,data : ""},
-          {fileName : `OtherExemple${genericKeyword}.test.ts`,data : ""},
-          {fileName : `LastOne${genericKeyword}.php`,data : ""},
+          {fileName : `The${keywordExemple}Amazing.css`,data : ""},
+          {fileName : `OtherExemple${keywordExemple}.test.ts`,data : ""},
+          {fileName : `LastOne${keywordExemple}.php`,data : ""},
         ]}
 
       fileHandler(
@@ -94,9 +95,9 @@ class Initializer implements IInitializeCommand {
         exampleTemplate.dirName,
         exampleTemplate.files
       )
-      console.log(`Un template d'exemple à été généré !`)
+      console.log(InfoMsgs.SUCCESS_EXAMPLE_TEMPLATE_CREATON)
     }catch (err){
-      console.log("OOPS ! Impossible de générer le template d'exemple !")
+      console.log(ErroMsgs.EXAMPLE_TEMPLATE_CREATION_UNEXPECTRED_ERR)
     }
 
   }
