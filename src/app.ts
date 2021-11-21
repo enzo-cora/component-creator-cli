@@ -4,6 +4,7 @@ import {Command} from "commander";
 import {create} from "./commands/Create";
 import {CommandEnum} from "./_definitions/CommandEnum";
 import {initializer} from "./commands/Initialize";
+import {cInfo} from "./_config";
 
 
 const run = async ()=> {
@@ -29,7 +30,7 @@ const run = async ()=> {
   if(process.argv.length > 2)
     await program.parseAsync(process.argv)
   else
-    console.log("Bienvenue sur component-creator-CLI")
+    console.log("Bienvenue sur",cInfo.bold.underline("component-creator-CLI"))
 
 
 }
