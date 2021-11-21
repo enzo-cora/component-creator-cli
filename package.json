@@ -14,7 +14,9 @@
     "url": "git+https://github.com/enzo-cora/component-creator-cli.git"
   },
   "author": "enzo",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "component",
     "creator",
@@ -35,7 +37,8 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "commander": "^8.3.0"
+    "commander": "^8.3.0",
+    "conf": "^10.0.3"
   },
   "types": "dist/app.d.ts",
   "main": "dist/app.js",

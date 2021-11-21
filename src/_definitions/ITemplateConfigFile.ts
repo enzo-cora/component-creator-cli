@@ -1,3 +1,9 @@
+type advancedWrkDirPath = {
+  "rootWorkDir" : string,
+  "extensionWorkDir" : string
+}
+
 export interface ITemplateConfigFile {
-  componentWorkDirectory: string
+  template : string
+  componentWorkDir : string | advancedWrkDirPath
 }
