@@ -40,14 +40,14 @@ export const create : ICreateCommand = async (
     return console.log(componentFilesResult.message)
 
   const componentDirName = componentInfos.getComponentDirName()
-  const componentCreation = fileHandler(
+  const componentCreation =  await fileHandler(
     componentWrkPathResult,
     componentDirName,
     componentFilesResult,
   )
 
   if(componentCreation instanceof Error)
-    return console.log('salluts',componentCreation.message)
+    return console.log(componentCreation.message)
   else
     console.log(componentCreation)
 
