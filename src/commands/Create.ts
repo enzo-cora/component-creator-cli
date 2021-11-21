@@ -47,7 +47,7 @@ export const create : ICreateCommand = async (
   )
 
   if(componentCreation instanceof Error)
-    return console.log('salluts',componentCreation.message)
+    return console.log(componentCreation.message)
   else
     console.log(componentCreation)
 
