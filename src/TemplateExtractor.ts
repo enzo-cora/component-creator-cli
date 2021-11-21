@@ -11,27 +11,29 @@ import {ITemplateConfigFile} from "./_definitions/ITemplateConfigFile";
 import {NamingConvention} from "./_constantes/NamingConvention";
 
 type compWrkDir = ITemplateConfigFile['componentWorkDir']
+type regExpInfo = {regex : RegExp, convention: NamingConvention}
 
-
+const regexWordThatContainSubstring = (generic)=> new RegExp(`"\b\w*\\${edging}${generic}\\${edging}\w*\b"`,"g")
 
 
 
 export class TemplateExtractor implements ITemplateExtractor{
 
-
-  private readonly genericRegex : RegExp
   constructor(
     public templateReader:ITemplateReader,
     public replaceVal : string,
     public subdomain? : string
   ) {
-    this.genericRegex = new RegExp( `\\${edging}${NamingConvention.raw}\\${edging}`,"g")
   }
 
 
-  getComponentDirName(generic? : NamingConvention) : string {
-    const genericDirName = this.templateReader.templateDirName
-    return genericDirName.replace(this.genericRegex, this.replaceVal)
+  getComponentDirName() : string {
+    const templateDirName = this.templateReader.templateDirName
+    const convDirName = this._getConvention(templateDirName)
+    const tempDirName = convDirName ?
+      templateDirName.replace(this._buildRegex(convDirName), this.replaceVal)
+      : templateDirName
+    return tempDirName
   }
 
   async getComponentFiles() : Promise<IComponentFileInfo[] | Error> {
@@ -39,10 +41,18 @@ export class TemplateExtractor implements ITemplateExtractor{
     if (filesResult instanceof Error)
       return filesResult
 
-    return filesResult.map(templateFileInfo =>({
-      fileName : templateFileInfo.fileName.replace(this.genericRegex, this.replaceVal),
-      data : templateFileInfo.fileData.replace(this.genericRegex, this.replaceVal)
-    }))
+    return filesResult.map(tempFileInfo =>{
+      const convFileName = this._getConvention(tempFileInfo.fileName)
+      const convFileData = this._getConvention(tempFileInfo.fileData)
+      return {
+        fileName : convFileName ?
+          tempFileInfo.fileName.replace(this._buildRegex(convFileName), this.replaceVal)
+          : tempFileInfo.fileName,
+        data : convFileData ?
+          tempFileInfo.fileData.replace(this._buildRegex(convFileData), this.replaceVal)
+          : tempFileInfo.fileData
+      }
+    })
   }
 
 
@@ -80,5 +90,19 @@ export class TemplateExtractor implements ITemplateExtractor{
   }
 
 
+  private _getConvention(str:string) : NamingConvention | null {
+    let nameConvention : NamingConvention | null = null
+    for(const namingConv of Object.values(NamingConvention)){
+      if(str.includes(`${edging}${namingConv}${edging}`)){
+        nameConvention =  namingConv
+        break
+      }
+    }
+    return nameConvention
+  }
+
+  private _buildRegex(convention:NamingConvention) : RegExp  {
+    return new RegExp( `\\${edging}${convention}\\${edging}`,"g")
+  }
 
 }
