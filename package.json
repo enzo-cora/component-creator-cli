@@ -14,9 +14,6 @@
     "url": "git+https://github.com/enzo-cora/component-creator-cli.git"
   },
   "author": "enzo",
-  "files": [
-    "dist"
-  ],
   "keywords": [
     "component",
     "creator",
@@ -48,9 +45,11 @@
     "snake-case": "^3.0.4",
     "table": "^6.7.3"
   },
-  "types": "dist/app.d.ts",
-  "main": "dist/app.js",
   "module": "dist/app.es.js",
+  "types": "dist/app.d.ts",
+  "files": [
+    "dist"
+  ],
   "bin": {
     "ccc": "dist/app.js"
   }
