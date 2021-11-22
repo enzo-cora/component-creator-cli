@@ -7,4 +7,5 @@ export const InfoMsgs = {
   SUCCESS_EXAMPLE_TEMPLATE_CREATON : cInfo(`Un template d'exemple à été généré !`),
   SUCCESS_INITIALIZATION : cSuccess('Initialisation effectuée avec succès'),
   SUCCESS_RELOAD: `Reload OK`,
+  NO_TEMPLATE: `You have no template`,
 }

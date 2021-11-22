@@ -15,15 +15,15 @@ export const generate : ICreateCommand = async (
   opts: ICreateCommandOptions
 )=>
 {
-  const TempMetaDataResult = await TemplateRepo.getMetadata(templateName)
+  const tempMetaDataResult = await TemplateRepo.getOneMetadata(templateName)
 
-  if(TempMetaDataResult instanceof Error)
-    return console.log(TempMetaDataResult.message)
+  if(tempMetaDataResult instanceof Error)
+    return console.log(tempMetaDataResult.message)
 
 
   let templateReader : ITemplateReader  = new TemplateReader(
     templateName,
-    TempMetaDataResult.path,
+    tempMetaDataResult.path,
   )
 
   const componentInfos = new TemplateExtractor(
@@ -32,7 +32,7 @@ export const generate : ICreateCommand = async (
     opts?.subdomain
   )
 
-  const componentWrkPathResult = componentInfos.getComponentWrkDirPath(TempMetaDataResult.configFile.componentWorkDir)
+  const componentWrkPathResult = componentInfos.getComponentWrkDirPath(tempMetaDataResult.configFile.componentWorkDir)
   if (componentWrkPathResult instanceof Error)
     return console.log(componentWrkPathResult.message)
 

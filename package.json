@@ -45,7 +45,8 @@
     "param-case": "^3.0.4",
     "pascal-case": "^3.1.2",
     "sentence-case": "^3.0.4",
-    "snake-case": "^3.0.4"
+    "snake-case": "^3.0.4",
+    "table": "^6.7.3"
   },
   "types": "dist/app.d.ts",
   "main": "dist/app.js",

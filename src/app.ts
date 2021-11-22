@@ -3,8 +3,10 @@
 import {Command} from "commander";
 import {generate} from "./commands/Generate";
 import {CommandEnum} from "./_constantes/CommandEnum";
-import {initializer} from "./commands/Initialize";
+import {Initializer} from "./commands/Initializer";
 import {cInfo} from "./_constantes/config";
+import {list} from "./commands/List";
+import {InfoMsgs} from "./_constantes/InfoMsgs";
 
 
 const run = async ()=> {
@@ -14,9 +16,15 @@ const run = async ()=> {
   program.version('2.1.0')
 
   program
+    .command(CommandEnum.list)
+    .description(`List all the available templates of the project`)
+    .action(  list)
+
+
+  program
     .command(CommandEnum.init)
     .description(`Create configs files and 1 example modele if first init. Else, check templates validity and cache your current configuration`)
-    .action(  ()=> {initializer.reload(true)})
+    .action(  ()=> {new Initializer(InfoMsgs.SUCCESS_INITIALIZATION,true).execute()})
 
 
   const generateCommands : CommandEnum[] = [CommandEnum.generate, CommandEnum.generateShortcut]

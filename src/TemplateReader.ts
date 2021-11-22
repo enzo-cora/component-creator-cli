@@ -22,7 +22,7 @@ export class TemplateReader implements ITemplateReader{
       return JSON.parse(fileBuffer.toString()) as ITemplateConfigFile
     }
     catch (err){
-      return new Error(ErroMsgs.UNEXPECTED_ERROR(err))
+      return new Error(ErroMsgs.UNEXPECTED_ERROR("la récupération du fichier de configuration",err))
     }
   }
 
@@ -79,7 +79,7 @@ export class TemplateReader implements ITemplateReader{
         })
     }
     catch (err){
-      return new Error(ErroMsgs.UNEXPECTED_ERROR(err))
+      return new Error(ErroMsgs.UNEXPECTED_ERROR("la récupération des fichiers du template",err))
     }
   }
 

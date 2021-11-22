@@ -2,9 +2,11 @@ import {ITemplateMetadata, ITemplateRepository} from "./_definitions/ITemplateRe
 import {TemplateReader} from "./TemplateReader";
 import {ErroMsgs} from "./_constantes/ErroMsgs";
 import Conf from "conf";
-import {initializer} from "./commands/Initialize";
+import {Initializer} from "./commands/Initializer";
 import {ITemplateConfigFile} from "./_definitions/ITemplateConfigFile";
 import fs from "fs";
+import {IInitializer} from "./_definitions/IInitializer";
+import {InfoMsgs} from "./_constantes/InfoMsgs";
 
 
 class TEMPLATE_NOT_FOUND extends Error {
@@ -17,7 +19,10 @@ class TEMPLATE_NOT_FOUND extends Error {
 
 class TemplateRepository implements ITemplateRepository{
 
-  constructor(private Store : Conf) {
+  constructor(
+    private Store : Conf,
+    private initialiser : IInitializer
+  ) {
   }
 
   clear() {
@@ -28,9 +33,9 @@ class TemplateRepository implements ITemplateRepository{
     this.Store.set(templateName,templatePath)
   }
 
-  async getMetadata(templateName: string) : Promise<ITemplateMetadata  | Error> {
+  async getOneMetadata(templateName: string) : Promise<ITemplateMetadata  | Error> {
 
-    let metadataResult = this._getTemplateMetadata(templateName)
+    let metadataResult = this._getMetadata(templateName)
 
     if(metadataResult instanceof TEMPLATE_NOT_FOUND){
       const reloadResult = await this._reloadCLI(templateName)
@@ -61,11 +66,37 @@ class TemplateRepository implements ITemplateRepository{
 
   }
 
-  private async _reloadCLI(templateName) : Promise<Error|ITemplateMetadata>{
-    const reloadResult = await initializer.reload()
+  async getAllMetadata() : Promise<ITemplateMetadata[]  | Error> {
+
+    const reloadResult = await this.initialiser.execute()
     if(reloadResult instanceof Error)
       return reloadResult
-    const metadataResult = this._getTemplateMetadata(templateName)
+
+    const entriesResult : Array<[string,string]> = Object.entries(this.Store.store as any)
+
+    let metadatas : ITemplateMetadata[] = []
+    for(const entry of entriesResult){
+      const templateName = entry[0]
+      const templateDirPath = entry[1]
+
+      const configFileResult = TemplateReader.getTemplateConfigFile(templateDirPath)
+      if(configFileResult instanceof Error)
+        return configFileResult
+
+      metadatas.push({
+        path : templateDirPath,
+        configFile : configFileResult
+      })
+
+    }
+    return metadatas
+  }
+
+  private async _reloadCLI(templateName) : Promise<Error|ITemplateMetadata>{
+    const reloadResult = await this.initialiser.execute()
+    if(reloadResult instanceof Error)
+      return reloadResult
+    const metadataResult = this._getMetadata(templateName)
     if(metadataResult instanceof Error)
       return metadataResult
     const consistencyResult = this._checkTemplateConsistency(
@@ -75,7 +106,7 @@ class TemplateRepository implements ITemplateRepository{
     if(consistencyResult instanceof Error)
       return consistencyResult
     else if (consistencyResult === false)
-      return new Error(ErroMsgs.CACHE_UNEXPECTED_NOREFRESH)
+      return new Error(ErroMsgs.CACHE_UNEXPECTED_INCONSISTENCY)
 
     return metadataResult
   }
@@ -88,7 +119,7 @@ class TemplateRepository implements ITemplateRepository{
     return configFile.template === cacheTempName
   }
 
-  private _getTemplateMetadata(templateName) : ITemplateMetadata | Error {
+  private _getMetadata(templateName) : ITemplateMetadata | Error {
     const path = this.Store.get(templateName) as string
 
     if(!path || !fs.existsSync(path))
@@ -104,4 +135,4 @@ class TemplateRepository implements ITemplateRepository{
 
 }
 
-export const TemplateRepo : ITemplateRepository  = new TemplateRepository(new Conf())
+export const TemplateRepo : ITemplateRepository  = new TemplateRepository(new Conf(),new Initializer(InfoMsgs.SUCCESS_RELOAD,false))
