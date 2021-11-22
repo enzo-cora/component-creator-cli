@@ -36,7 +36,7 @@ const caseTransform : caseTransform  = {
   sentenceCase : (str)=> sentenceCase(str,optionsCaseTransform)
 }
 
-
+const regexPath : RegExp = new RegExp("(?:\\.|\\.\\.)\\/(?:\\.\\.\\/)*[\\w_-]+","g")
 
 export class TemplateExtractor implements ITemplateExtractor{
 
@@ -51,13 +51,18 @@ export class TemplateExtractor implements ITemplateExtractor{
   getComponentDirName() : string {
     const templateDirName = this.templateReader.templateDirName
     const convention : NamingConvention | null = this._getConvention(templateDirName)
-    let formatedDirName = templateDirName
-    if(convention){
-      formatedDirName = templateDirName.replace(this._buildClassicRegex(convention), this.replaceVal)
-      if(convention !== "none")
-        formatedDirName = caseTransform[convention](formatedDirName)
-    }
-    return formatedDirName
+
+    let formatedReplaceValue = this.replaceVal
+
+    if(!convention)
+      return templateDirName
+
+    else if(convention && convention !== "none" )
+      formatedReplaceValue = caseTransform[convention](formatedReplaceValue)
+
+    return templateDirName.replace(this._buildClassicRegex(convention), formatedReplaceValue)
+
+
   }
 
   async getComponentFiles() : Promise<IComponentFileInfo[] | Error> {
@@ -67,15 +72,22 @@ export class TemplateExtractor implements ITemplateExtractor{
 
     return filesResult.map(fileInfo =>{
 
-      const conventioFileName : NamingConvention|null = this._getConvention(fileInfo.fileName)
+
+      // this._transformPaths(fileInfo.fileData,"src/core/enzoComp")
+      const conventionFileName : NamingConvention|null = this._getConvention(fileInfo.fileName)
+
       let formatedFileName = fileInfo.fileName
-      if(conventioFileName){
-        formatedFileName = fileInfo.fileName.replace(this._buildClassicRegex(conventioFileName), this.replaceVal)
-        if(conventioFileName !== "none")
-          formatedFileName = caseTransform[conventioFileName](formatedFileName)
-      }
+      let formatedReplaceValue = this.replaceVal
+
+
+      if(conventionFileName && conventionFileName !== "none" )
+        formatedReplaceValue = caseTransform[conventionFileName](formatedReplaceValue)
+
+      if(conventionFileName)
+        formatedFileName = fileInfo.fileName.replace(this._buildClassicRegex(conventionFileName), formatedReplaceValue)
 
       const formatedData = this._changeFileContent(fileInfo.fileData)
+
       return {
         fileName : formatedFileName,
         data : formatedData
@@ -124,16 +136,16 @@ export class TemplateExtractor implements ITemplateExtractor{
     const conventions : NamingConvention[] = this._getAllConventions(data)
     if(!conventions.length)
       return data
+    const superRegex : RegExp = this._buildSuperRegex(conventions)
 
-    const superRegex : RegExp = this._buildSuperRefex(conventions)
-    return  data.replace(superRegex,(matchWord,...rest) => {
-      const capture = rest.filter(arg=> Object.values(NamingConvention).includes(arg))[0]
-      if(capture === "none")
-        return matchWord.replace(`${edging}${capture}${edging}`,this.replaceVal)
 
-      const typedReplaceValue = " " + this.replaceVal
-      const newWord = matchWord.replace(`${edging}${capture}${edging}`,typedReplaceValue)
-      return caseTransform[capture](newWord)
+    return  data.replace(superRegex,generic => {
+      const convention : NamingConvention = this._getConvention(generic) as NamingConvention
+      let formatedReplaceValue =  this.replaceVal
+      if(convention !== "none" )
+        formatedReplaceValue = caseTransform[convention](formatedReplaceValue)
+
+      return formatedReplaceValue
     })
 
   }
@@ -162,10 +174,20 @@ export class TemplateExtractor implements ITemplateExtractor{
     return new RegExp( `\\${edging}${convention}\\${edging}`,"g")//Capture only generic keyword
   }
 
-  private _buildSuperRefex(conventions:NamingConvention[]) : RegExp  {
-    const preRegex = (convention) : string  => `\\b\\w*\\${edging}(${convention})\\${edging}\\w*\\b`//Capture word that contain generic keyword
-    const preRegexArr : string[] = conventions.map(conv => preRegex(conv))
-    return new RegExp(preRegexArr.join("|"),"g")
+  private _buildSuperRegex(conventions:NamingConvention[]) : RegExp  {
+    const preRegexArray : string[] = conventions.map(conv =>`\\${edging}${conv}\\${edging}`)
+    return new RegExp(preRegexArray.join("|"),"g")
   }
+
+/*  private _transformPaths(data:string,compDir:string){
+    data.replace(regexPath,(prevPath)=>{
+      const absolutePrevPath = path.resolve(prevPath)
+      console.log(`
+      ${prevPath}
+      ${absolutePrevPath}
+      `)
+      return""
+    })
+  }*/
 
 }
