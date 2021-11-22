@@ -21,7 +21,7 @@ const run = async ()=> {
 
   const generateCommands : CommandEnum[] = [CommandEnum.generate, CommandEnum.generateShortcut]
   for(const cmd of generateCommands){
-    const description = cmd === CommandEnum.generate ? "Create component" : `Shortcute of "${cmd}" command"`
+    const description = cmd === CommandEnum.generate ? "Create component" : `Shortcute for "${cmd}" command"`
     program
       .command(cmd)
       .description(description)
@@ -30,13 +30,6 @@ const run = async ()=> {
       .option('-s, --subdomain <subdomain>', 'Allows to choose a subdomain in which the component will be created')
       .action(generate)
   }
-
-  program
-    .command(CommandEnum.generateShortcut)
-    .argument('<templateName> <replacementName>')
-    .option('-s, --subdomain <subdomain>')
-    .description(`Shotcut for "${CommandEnum.generate}" command`)
-    .action(generate)
 
   if(process.argv.length > 2)
     await program.parseAsync(process.argv)

@@ -4,6 +4,7 @@ import {ErroMsgs} from "./_constantes/ErroMsgs";
 import Conf from "conf";
 import {initializer} from "./commands/Initialize";
 import {ITemplateConfigFile} from "./_definitions/ITemplateConfigFile";
+import fs from "fs";
 
 
 class TEMPLATE_NOT_FOUND extends Error {
@@ -89,8 +90,10 @@ class TemplateRepository implements ITemplateRepository{
 
   private _getTemplateMetadata(templateName) : ITemplateMetadata | Error {
     const path = this.Store.get(templateName) as string
-    if(!path)
+
+    if(!path || !fs.existsSync(path))
       return new TEMPLATE_NOT_FOUND(ErroMsgs.TEMPLATE_NOT_EXIST(templateName))
+
     const configFileResult = TemplateReader.getTemplateConfigFile(path)
     if(configFileResult instanceof Error)
       return configFileResult

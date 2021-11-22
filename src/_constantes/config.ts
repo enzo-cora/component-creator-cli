@@ -3,7 +3,7 @@ import {NamingConvention} from "./NamingConvention";
 
 export const edging = "$"
 
-export const keywordExemple = `${edging}${NamingConvention.raw}${edging}`
+export const keywordExemple = `${edging}${NamingConvention.none}${edging}`
 
 export const CLIAccess : string = "ccc"
 
