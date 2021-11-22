@@ -12,6 +12,6 @@ export interface ITemplateExtractor {
   replaceVal:string,
   subdomain? : string
   getComponentDirName() : string
-  getComponentFiles() : Promise<IComponentFileInfo[] | Error>
+  getComponentFiles(componetDirectory:string) : Promise<IComponentFileInfo[] | Error>
   getComponentWrkDirPath(compWrkDirPath : ITemplateConfigFile['componentWorkDir']) : string | Error
 }

@@ -36,11 +36,14 @@ export const generate : ICreateCommand = async (
   if (componentWrkPathResult instanceof Error)
     return console.log(componentWrkPathResult.message)
 
-  const componentFilesResult = await componentInfos.getComponentFiles()
+
+
+  const componentFilesResult = await componentInfos.getComponentFiles(componentWrkPathResult)
   if(componentFilesResult instanceof Error)
     return console.log(componentFilesResult.message)
 
   const componentDirName = componentInfos.getComponentDirName()
+
   const componentCreation =  await fileHandler(
     componentWrkPathResult,
     componentDirName,

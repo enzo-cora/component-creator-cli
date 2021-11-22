@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import {
-  edging,
+  edging, nameConfigDir,
 } from "./_constantes/config";
 
 import path from "path";
@@ -36,7 +36,7 @@ const caseTransform : caseTransform  = {
   sentenceCase : (str)=> sentenceCase(str,optionsCaseTransform)
 }
 
-const regexPath : RegExp = new RegExp("(?:\\.|\\.\\.)\\/(?:\\.\\.\\/)*[\\w_-]+","g")
+const regexPath : RegExp = new RegExp("(?<!\\/)(\\.\\.\\/)+[\\w\\/_-]+","g")
 
 export class TemplateExtractor implements ITemplateExtractor{
 
@@ -65,7 +65,7 @@ export class TemplateExtractor implements ITemplateExtractor{
 
   }
 
-  async getComponentFiles() : Promise<IComponentFileInfo[] | Error> {
+  async getComponentFiles(componentWrkDir:string) : Promise<IComponentFileInfo[] | Error> {
     const filesResult = await this.templateReader.getTemplateFiles()
     if (filesResult instanceof Error)
       return filesResult
@@ -73,7 +73,6 @@ export class TemplateExtractor implements ITemplateExtractor{
     return filesResult.map(fileInfo =>{
 
 
-      // this._transformPaths(fileInfo.fileData,"src/core/enzoComp")
       const conventionFileName : NamingConvention|null = this._getConvention(fileInfo.fileName)
 
       let formatedFileName = fileInfo.fileName
@@ -86,7 +85,9 @@ export class TemplateExtractor implements ITemplateExtractor{
       if(conventionFileName)
         formatedFileName = fileInfo.fileName.replace(this._buildClassicRegex(conventionFileName), formatedReplaceValue)
 
-      const formatedData = this._changeFileContent(fileInfo.fileData)
+      let formatedData = this._changeFileContent(fileInfo.fileData)
+      formatedData =  this._transformPaths(formatedData,`${componentWrkDir}/COMPONENT_DIRECTORY`)
+
 
       return {
         fileName : formatedFileName,
@@ -179,15 +180,14 @@ export class TemplateExtractor implements ITemplateExtractor{
     return new RegExp(preRegexArray.join("|"),"g")
   }
 
-/*  private _transformPaths(data:string,compDir:string){
-    data.replace(regexPath,(prevPath)=>{
-      const absolutePrevPath = path.resolve(prevPath)
-      console.log(`
-      ${prevPath}
-      ${absolutePrevPath}
-      `)
-      return""
+  private _transformPaths(data:string,compDir:string) : string{
+    return data.replace(regexPath,(prevPath)=>{
+        const templateFileAbsolutPath = `${path.resolve(nameConfigDir)}/TEMPLATE_NAME/TEMPLATE_FILE`
+        const importAbsolutePath = path.relative(templateFileAbsolutPath, prevPath)
+        const importPathRelativeToProjectRoot = path.resolve(importAbsolutePath).substring(1)
+        const newRelativeImport = path.relative(compDir,importPathRelativeToProjectRoot)
+        return newRelativeImport
     })
-  }*/
+  }
 
 }
