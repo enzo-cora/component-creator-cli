@@ -1,5 +1,5 @@
 import fs from "fs";
-import {cWarning, keywordExemple, nameConfigDir, nameConfigFile} from "../_constantes/config";
+import {cWarning, edging, keywordExemple, nameConfigDir, nameConfigFile} from "../_constantes/config";
 import path from "path";
 import {readdir} from "fs/promises";
 import {ITemplateDirInfos} from "../_definitions/ITemplateReader";
@@ -10,6 +10,7 @@ import {IComponentFileInfo} from "../_definitions/ITemplateExtractor";
 import {fileHandler} from "../FileHandler";
 import {ErroMsgs} from "../_constantes/ErroMsgs";
 import {InfoMsgs} from "../_constantes/InfoMsgs";
+import {NamingConvention} from "../_constantes/NamingConvention";
 
 type IExampleTemplate = {
   dirName : string,
@@ -35,20 +36,24 @@ export class Initializer implements IInitializer {
     try {
       const configDirPath = path.resolve(nameConfigDir)
       const exampleTemplate : IExampleTemplate =  {
-        dirName : `Exemple${keywordExemple}Template`,
+        dirName : `my-${edging}${NamingConvention.paramCase}${edging}-repository`,
         files : [
-          {fileName : `My${keywordExemple}Exemple.jsx`,data : ""},
+          {fileName : `implementation-${edging}${NamingConvention.paramCase}${edging}-repository.ts`,data : ""},
+          {fileName : `${edging}${NamingConvention.paramCase}${edging}-repository.test.ts`,data : ""},
           {fileName : `${nameConfigFile}`,data :
-              `
-{
-  "template" : "exemple",
+`{
+  "template" : "repository",
   "componentWorkDir" :"src/core"
-}
-              `
+}`
           },
-          {fileName : `The${keywordExemple}Amazing.css`,data : ""},
-          {fileName : `OtherExemple${keywordExemple}.test.ts`,data : ""},
-          {fileName : `LastOne${keywordExemple}.php`,data : ""},
+          {fileName : `interface-${edging}${NamingConvention.paramCase}${edging}-repository.ts`,data :
+`interface I${edging}${NamingConvention.pascalCase}${edging}Repo = {        
+  anyProperty : string        
+  hello : number        
+  getAll${edging}${NamingConvention.pascalCase}${edging} () : Object[]        
+  getOne${edging}${NamingConvention.pascalCase}${edging} () : Object        
+}`
+          },
         ]}
 
       await fileHandler(
