@@ -185,12 +185,12 @@ export class TemplateExtractor implements ITemplateExtractor{
     return new RegExp(preRegexArray.join("|"),"g")
   }
 
-  private _transformPaths(data:string,compDir:string) : string{
-    return data.replace(regexPath,(prevPath)=>{
-        const templateFileAbsolutPath = `${path.resolve(nameConfigDir)}/TEMPLATE_NAME/TEMPLATE_FILE`
-        const importAbsolutePath = path.relative(templateFileAbsolutPath, prevPath)
-        const importPathRelativeToProjectRoot = path.resolve(importAbsolutePath).substring(1)
-        const newRelativeImport = path.relative(compDir,importPathRelativeToProjectRoot)
+  private _transformPaths(data:string,compMkdirPath:string) : string{
+    return data.replace(regexPath,(importRelativeToTarget)=>{
+      const fileAbsolutPath = `${path.resolve(nameConfigDir)}/TEMPLATE_NAME/TEMPLATE_FILE`
+      const importAbsolutePath = path.join(fileAbsolutPath, importRelativeToTarget)
+      const newRelativeImport = path.relative(compMkdirPath,importAbsolutePath)
+
         return newRelativeImport
     })
   }
