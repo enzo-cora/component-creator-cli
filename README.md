@@ -227,11 +227,11 @@ Use the "`componentWorkDir`" property as **object** when working with subdomains
 
 # Examples
 - In all the examples we will create a component from this '*repository*' template
-- Tous les exemples utiliserons le même template avec les même templates files
+- All examples will use the same template
 - All the examples will use the **same template** and **same files contoent**
-- But all the examples will have **different**
-- template **configuration file**
-- **project tree directory**
+- But all the examples will have **different** :
+  - template **configuration file**
+  - **project tree directory**
 
 Same 'repository' ***template** directory* `my-$paramCase$-repository/`
 ```    
@@ -328,7 +328,7 @@ my-project-2/
 
 \- example 2 **command** `generate`
 ```cmd  
-ccc generate repository 'bus' -s infra/repos  
+ccc generate repository 'bus' -s ./infra/repos  
 ```  
 \- example 2 : **component** directory `my-bus-repository/`  
 generated at `/my-project-2/src/infra/repos/my-bus-repository`
@@ -385,7 +385,7 @@ define at `/my-project-3/ccc-config/my-$paramCase$-repository/template-config.js
 ```     
 \- example 3 **command** `generate`
   ```cmd  
-ccc generate repository 'taxi' -s boundedCtx3  
+ccc generate repository 'taxi' -s ./boundedCtx3  
 ```  
 \- example 3 : **component** directory `my-taxi-repository/`  
 generated at  `/my-project-3/src/`**`boundedCtx3`**`/infra/repos/my-taxi-repository`
