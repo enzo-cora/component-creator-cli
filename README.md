@@ -137,7 +137,7 @@ This command will generate component based on [template](#v--template-structure)
 #### Options : `generate`
 |    Option   | Short |  Type  |                                    Description                                   | Default Value |      
 |:-----------:|:-----:|:------:|:--------------------------------------------------------------------------------:|:-------------:|      
-| `--subdomain` |   `-s` | `string` | **Optional**. Path of subdomain placed between the **wrk dir** and the **extension wrk dir** |      none     |      
+| `--subdomain` |   `-s` | `string` | **Optional**. Path of subdomain. It should be relative to `componentWorkDir` or `rootWorkDir`. The subdomain will be placed between the `componentWorkDir` and `rootWorkDir` |      none     |      
 
 ### C- List all templates
 
@@ -205,7 +205,7 @@ In this directory you will stored  all your templates like `my-extravagant-$none
 | Field | Type | Description |        
 |:---------------------------------------------------:|:--------------------:|:----------------------------------------------------------:|        
 | `template` | `string` |           **Required** & **Unique**. Template name.          |        
-|  [`"componentWorkDirectory"`](#componentworkdirectory-string--object)| `string` \| `object` | **Required**. Used to set the component working directory. |      
+|  [`"componentWorkDirectory"`](#componentworkdirectory-string--object)| `string` \| `object` | **Required**. Used to set the component working directory. Should be **relative** to project directory |      
 This  configuration file is **mandatory**.
 
 ####  `"componentWorkDirectory"`: string | object
@@ -219,8 +219,8 @@ As **object** :
 
 |                  Field                 |   Type   |                      Description                      |      
 |:--------------------------------------:|:--------:|:-----------------------------------------------------:|      
-|    `componentWorkDir`.`rootWorkDir` | `string` |       **Required**. Component working directory.      |      
-| `componentWorkDir` .`extensionWorkDir` | `string` | **Optional**. Exention of component working directory |      
+|    `componentWorkDir`.`rootWorkDir` | `string` |       **Required**. Component working directory. Should be **relative** to project directory     |      
+| `componentWorkDir` .`extensionWorkDir` | `string` | **Optional**. Exention of component working directory. Should be relative to `rootWorkDir`  |      
 
 
 Use the "`componentWorkDir`" property as **object** when working with subdomains and want to create your components in different subdomains [like ewample 3](#example-3--use-componentworkdir-config-property-as-object) with  "`--subdomain`" option.

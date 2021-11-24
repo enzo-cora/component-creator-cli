@@ -8,7 +8,7 @@ import {TemplateReader} from "../TemplateReader";
 import {TemplateRepo as store} from "../TemplateRepository";
 import {IComponentFileInfo} from "../_definitions/ITemplateExtractor";
 import {fileHandler} from "../FileHandler";
-import {ErroMsgs} from "../_constantes/ErroMsgs";
+import {ErrorMsgs} from "../_constantes/ErrorMsgs";
 import {InfoMsgs} from "../_constantes/InfoMsgs";
 import {NamingConvention} from "../_constantes/NamingConvention";
 
@@ -63,7 +63,7 @@ export class Initializer implements IInitializer {
       )
       console.log(InfoMsgs.SUCCESS_EXAMPLE_TEMPLATE_CREATON)
     }catch (err){
-      console.log(ErroMsgs.UNEXPECTRED_EXAMPLE_TEMPLATE_CREATION_ERR)
+      console.log(ErrorMsgs.UNEXPECTRED_EXAMPLE_TEMPLATE_CREATION_ERR)
     }
 
   }
@@ -96,7 +96,7 @@ export class Initializer implements IInitializer {
 
    }
    catch (err){
-     console.log(ErroMsgs.UNEXPECTED_ERR("l'initialisation",err))
+     console.log(ErrorMsgs.UNEXPECTED_ERR("l'initialisation",err))
    }
   }
 
@@ -125,7 +125,7 @@ export class Initializer implements IInitializer {
     if(Object.keys(dupliErrors).length)
       for(const tempName in dupliErrors){
         const paths = [...dupliErrors[tempName].values()]
-        errorsMessages.push(ErroMsgs.DUPLICATE_TEMPLATE_NAME(tempName,paths))
+        errorsMessages.push(ErrorMsgs.DUPLICATE_TEMPLATE_NAME(tempName,paths))
       }
 
     if(errorsMessages.length)
@@ -142,7 +142,7 @@ export class Initializer implements IInitializer {
       await Initializer.initExempleTemplate()
       return true
     }
-    return new Error(ErroMsgs.CONFIG_DIR_MISS)
+    return new Error(ErrorMsgs.CONFIG_DIR_MISS)
   }
 
 

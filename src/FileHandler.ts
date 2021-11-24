@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import path from "path";
-import {ErroMsgs} from "./_constantes/ErroMsgs";
+import {ErrorMsgs} from "./_constantes/ErrorMsgs";
 import {IComponentFileInfo} from "./_definitions/ITemplateExtractor";
 import {InfoMsgs} from "./_constantes/InfoMsgs";
 
@@ -17,16 +17,16 @@ export const fileHandler : IComponentCreator = async (
   const mkdirPath = `${compWrkDir}/${compDrirName}`
 
   if(  fs.existsSync(mkdirPath))
-    return new Error(ErroMsgs.COMPONENT_ALREADY_EXIST(compDrirName, path.relative(path.resolve(),mkdirPath) ))
+    return new Error(ErrorMsgs.COMPONENT_ALREADY_EXIST(compDrirName, path.relative(path.resolve(),mkdirPath) ))
 
   try {
     fs.mkdirSync(mkdirPath)
   }
   catch (err){
     if(err instanceof Error)
-      return new Error(ErroMsgs.UNEXPECTRED_DIRECTORY_CREATION_ERR(compDrirName,err.message ))
+      return new Error(ErrorMsgs.UNEXPECTRED_DIRECTORY_CREATION_ERR(compDrirName,err.message ))
     else
-      return new Error(ErroMsgs.UNEXPECTRED_DIRECTORY_CREATION_ERR(compDrirName,err))
+      return new Error(ErrorMsgs.UNEXPECTRED_DIRECTORY_CREATION_ERR(compDrirName,err))
 
   }
 
@@ -40,9 +40,9 @@ export const fileHandler : IComponentCreator = async (
   }
   catch (err){
     if(err instanceof Error)
-      return new Error(ErroMsgs.UNEXPECTRED_FILE_CREATION_ERR(compDrirName,err.message ))
+      return new Error(ErrorMsgs.UNEXPECTRED_FILE_CREATION_ERR(compDrirName,err.message ))
     else
-      return new Error(ErroMsgs.UNEXPECTRED_FILE_CREATION_ERR(compDrirName,err))
+      return new Error(ErrorMsgs.UNEXPECTRED_FILE_CREATION_ERR(compDrirName,err))
   }
 
 

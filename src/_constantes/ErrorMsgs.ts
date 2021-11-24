@@ -8,7 +8,7 @@ const provide_valid_stuff = (stuff) =>`Vous devez fournir ${chalk.underline(stuf
 const unable_create_component = cErr("Impossible de créer votre composant")
 const contact_creator_unexpected_error = cInfo("Afin que le problème soit résolut, veuillez contacter le créateur du module")
 
-export const ErroMsgs = {
+export const ErrorMsgs = {
 
   UNEXPECTED_ERR (pendant, err) {return `${cWarning("Une erreur inattendue s'est produite pendant " + pendant)}:\n${err?.message ? err.message : err} \n ${contact_creator_unexpected_error}`},
 
@@ -33,6 +33,18 @@ ${err?.message ? err.message : err} \n ${contact_creator_unexpected_error}`,
 `,
 
   CONFIG_FIlE_MISS : (tempName)=>`${cWarning("Fichier de configuration manquant")} : Vous devez ajouter le fichier de configuration ${cInfo.underline(nameConfigFile)} au template "${cWarning(tempName)}"`,
+
+  PROJECT_PATH_INVALID_VALUE: (errPath)=>`${cWarning("Propriété invalide dans le fichier config du template:")} Le chemin '${cWarning(errPath)}'  de la pté ${cInfo("componentWorkDir")} est incorrect car vous avez fourni ${cErr("un chemin absolut")} 
+  Vous devez fournir un chemin ${chalk.underline("relatif")} à ${cInfo("la racine de votre projet")}`,
+
+  ROOT_PATH_INVALID_VALUE: (errPath)=>`${cWarning("Propriété invalide dans le fichier config du template:")} Le chemin '${cWarning(errPath)}'  de la pté ${cInfo("componentWorkDir.rootWorkDir")} est incorrect car vous avez fourni ${cErr("un chemin absolut")} 
+  Vous devez fournir un chemin ${chalk.underline("relatif")} à ${cInfo("la racine de votre projet")}`,
+
+  EXTENTION_PATH_INVALID_VALUE: (errPath)=>`${cWarning("Propriété invalide dans le fichier config du template:")} Le chemin '${cWarning(errPath)}' de la pté ${cInfo("componentWorkDir.extensionWorkDir")} est incorrect car vous avez fourni ${cErr("un chemin absolut")} 
+  Vous devez fournir un chemin ${chalk.underline("relatif")} à la pté ${cInfo("componentWorkDir.rootWorkDir")}`,
+
+  SUBDOMAIN_PATH_INVALID_VALUE: (errPath)=>`${cWarning("Valeur d'option invalide:")} Le chemin '${cWarning(errPath)}' de l'option ${cInfo("--subdomain")} est incorrect car vous avez fourni ${cErr("un chemin absolut")} 
+  Vous devez fournir un chemin ${chalk.underline("relatif")} à la pté ${cInfo("componentWorkDir")} |  ${cInfo("componentWorkDir.rootWorkDir")} `,
 
   TEMPLATE_NOT_EXIST : (tempName:string) => `Vous n'avez pas de template nommé "${cErr(tempName)}"`,
 

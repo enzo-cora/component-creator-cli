@@ -1,6 +1,6 @@
 import {ITemplateMetadata, ITemplateRepository} from "./_definitions/ITemplateRepository";
 import {TemplateReader} from "./TemplateReader";
-import {ErroMsgs} from "./_constantes/ErroMsgs";
+import {ErrorMsgs} from "./_constantes/ErrorMsgs";
 import Conf from "conf";
 import {Initializer} from "./commands/Initializer";
 import {ITemplateConfigFile} from "./_definitions/ITemplateConfigFile";
@@ -106,7 +106,7 @@ class TemplateRepository implements ITemplateRepository{
     if(consistencyResult instanceof Error)
       return consistencyResult
     else if (consistencyResult === false)
-      return new Error(ErroMsgs.CACHE_UNEXPECTED_INCONSISTENCY)
+      return new Error(ErrorMsgs.CACHE_UNEXPECTED_INCONSISTENCY)
 
     return metadataResult
   }
@@ -123,7 +123,7 @@ class TemplateRepository implements ITemplateRepository{
     const path = this.Store.get(templateName) as string
 
     if(!path || !fs.existsSync(path))
-      return new TEMPLATE_NOT_FOUND(ErroMsgs.TEMPLATE_NOT_EXIST(templateName))
+      return new TEMPLATE_NOT_FOUND(ErrorMsgs.TEMPLATE_NOT_EXIST(templateName))
 
     const configFileResult = TemplateReader.getTemplateConfigFile(path)
     if(configFileResult instanceof Error)
