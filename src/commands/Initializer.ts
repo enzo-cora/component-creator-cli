@@ -36,7 +36,7 @@ export class Initializer implements IInitializer {
     try {
       const configDirPath = path.resolve(nameConfigDir)
       const exampleTemplate : IExampleTemplate =  {
-        dirName : `my-${edging}${NamingConvention.paramCase}${edging}-repository`,
+        dirName : `example-${edging}${NamingConvention.paramCase}${edging}-repository`,
         files : [
           {fileName : `implementation-${edging}${NamingConvention.paramCase}${edging}-repository.ts`,data : ""},
           {fileName : `${edging}${NamingConvention.paramCase}${edging}-repository.test.ts`,data : ""},
