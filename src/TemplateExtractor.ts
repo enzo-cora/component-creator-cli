@@ -187,7 +187,7 @@ export class TemplateExtractor implements ITemplateExtractor{
 
   private _transformPaths(data:string,compMkdirPath:string) : string{
     return data.replace(regexPath,(importRelativeToTarget)=>{
-      const fileAbsolutPath = `${path.resolve(nameConfigDir)}/template/rqeterg`
+      const fileAbsolutPath = `${path.resolve(nameConfigDir)}/TEMPLATE`
       const importAbsolutePath = path.join(fileAbsolutPath, importRelativeToTarget)
       const newRelativeImport = path.relative(compMkdirPath,importAbsolutePath)
 
