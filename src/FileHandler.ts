@@ -24,9 +24,9 @@ export const fileHandler : IComponentCreator = async (
   }
   catch (err){
     if(err instanceof Error)
-      return new Error(ErroMsgs.DIRECTORY_CREATION_UNEXPECTRED_ERR(compDrirName,err.message ))
+      return new Error(ErroMsgs.UNEXPECTRED_DIRECTORY_CREATION_ERR(compDrirName,err.message ))
     else
-      return new Error(ErroMsgs.DIRECTORY_CREATION_UNEXPECTRED_ERR(compDrirName,err))
+      return new Error(ErroMsgs.UNEXPECTRED_DIRECTORY_CREATION_ERR(compDrirName,err))
 
   }
 
@@ -40,9 +40,9 @@ export const fileHandler : IComponentCreator = async (
   }
   catch (err){
     if(err instanceof Error)
-      return new Error(ErroMsgs.FILE_CREATION_UNEXPECTRED_ERR(compDrirName,err.message ))
+      return new Error(ErroMsgs.UNEXPECTRED_FILE_CREATION_ERR(compDrirName,err.message ))
     else
-      return new Error(ErroMsgs.FILE_CREATION_UNEXPECTRED_ERR(compDrirName,err))
+      return new Error(ErroMsgs.UNEXPECTRED_FILE_CREATION_ERR(compDrirName,err))
   }
 
 

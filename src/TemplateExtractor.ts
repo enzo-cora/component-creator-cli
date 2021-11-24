@@ -118,7 +118,7 @@ export class TemplateExtractor implements ITemplateExtractor{
       subdomainPath = `${rootWrkDirPath}/${this.subdomain}`
       if(!fs.existsSync(subdomainPath))
         return new Error(ErroMsgs.SUBDOMAIN_PATH_NOT_EXISTE(this.subdomain, path.relative(path.resolve(),rootWrkDirPath)))
-      compWrkDirPath = `${subdomainPath}/${this.subdomain}/${extensionWorkDir}`
+      compWrkDirPath = `${subdomainPath}/${extensionWorkDir}`
       if(!fs.existsSync(compWrkDirPath))
         return new Error(ErroMsgs.EXTENTION_WRK_DIR_NOT_EXISTE(extensionWorkDir, path.relative(path.resolve(),subdomainPath)))
       return compWrkDirPath

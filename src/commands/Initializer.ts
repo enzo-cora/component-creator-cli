@@ -47,7 +47,7 @@ export class Initializer implements IInitializer {
 }`
           },
           {fileName : `interface-${edging}${NamingConvention.paramCase}${edging}-repository.ts`,data :
-`interface I${edging}${NamingConvention.pascalCase}${edging}Repo = {        
+`interface I${edging}${NamingConvention.pascalCase}${edging}Repo {        
   anyProperty : string        
   hello : number        
   getAll${edging}${NamingConvention.pascalCase}${edging} () : Object[]        
@@ -63,7 +63,7 @@ export class Initializer implements IInitializer {
       )
       console.log(InfoMsgs.SUCCESS_EXAMPLE_TEMPLATE_CREATON)
     }catch (err){
-      console.log(ErroMsgs.EXAMPLE_TEMPLATE_CREATION_UNEXPECTRED_ERR)
+      console.log(ErroMsgs.UNEXPECTRED_EXAMPLE_TEMPLATE_CREATION_ERR)
     }
 
   }
@@ -96,7 +96,7 @@ export class Initializer implements IInitializer {
 
    }
    catch (err){
-     console.log(ErroMsgs.UNEXPECTED_ERROR("l'initialisation",err))
+     console.log(ErroMsgs.UNEXPECTED_ERR("l'initialisation",err))
    }
   }
 

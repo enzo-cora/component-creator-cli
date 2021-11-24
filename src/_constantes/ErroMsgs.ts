@@ -10,7 +10,15 @@ const contact_creator_unexpected_error = cInfo("Afin que le problème soit réso
 
 export const ErroMsgs = {
 
-  UNEXPECTED_ERROR (pendant,err) {return `${cWarning("Une erreur inattendue s'est produite pendant " + pendant)}:\n${err?.message ? err.message : err} \n ${contact_creator_unexpected_error}`},
+  UNEXPECTED_ERR (pendant, err) {return `${cWarning("Une erreur inattendue s'est produite pendant " + pendant)}:\n${err?.message ? err.message : err} \n ${contact_creator_unexpected_error}`},
+
+  UNEXPECTRED_FILE_CREATION_ERR : (fileName, err)=>  `${cWarning("Une erreur inattendue s'est produite")} pendant la création du fichier "${cWarning(fileName)}" : 
+${err?.message ? err.message : err} \n${contact_creator_unexpected_error}`,
+
+  UNEXPECTRED_DIRECTORY_CREATION_ERR : (dirName, err)=>  `${cWarning("Une erreur inattendue s'est produite")} pendant la création du répertoire "${cWarning(dirName)}" : 
+${err?.message ? err.message : err} \n ${contact_creator_unexpected_error}`,
+
+  UNEXPECTRED_EXAMPLE_TEMPLATE_CREATION_ERR :   cInfo("OOPS ! Impossible de générer le template d'exemple !"),
 
   DUPLICATE_TEMPLATE_NAME  : (dupliName:string, paths:string[]) => {
     const formatedPaths : [string][] = paths.map(path => [`${cWarning(path)}`])
@@ -40,13 +48,6 @@ export const ErroMsgs = {
 
   COMPONENT_ALREADY_EXIST : (dirName, wrkPath)=>  `Impossible de créer le composant "${cInfo(dirName)}" car ${cWarning("un composant du même nom existe déjà à cet emplacement")} (${wrkPath})`,
 
-  FILE_CREATION_UNEXPECTRED_ERR : (fileName, err)=>  `${cWarning("Une erreur inattendue s'est produite")} pendant la création du fichier ${cWarning(fileName)} : 
-${err?.message ? err.message : err} \n${contact_creator_unexpected_error}`,
-
-  DIRECTORY_CREATION_UNEXPECTRED_ERR : (dirName, err)=>  `${cWarning("Une erreur inattendue s'est produite")} pendant la création du répertoire ${cWarning(dirName)} : 
-${err?.message ? err.message : err} \n ${contact_creator_unexpected_error}`,
 
   CACHE_UNEXPECTED_INCONSISTENCY :   cErr(`Un problème inattendu de est survenue pendant la vérification de cohérence du cache : ${cErr("Impossible d'établir de cohérence entre le contenu du cache et celui des templates !")} `),
-
-  EXAMPLE_TEMPLATE_CREATION_UNEXPECTRED_ERR :   cInfo("OOPS ! Impossible de générer le template d'exemple !"),
 }

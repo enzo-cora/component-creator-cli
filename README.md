@@ -245,7 +245,7 @@ Same 'repository' ***template** directory* `my-$paramCase$-repository/`
  ```    
 Same 'repository' ***template** file content* : `./interface-$paramCase$-repository.ts`
 ```typescript      
-interface I$pascalCase$Repo = {      
+interface I$pascalCase$Repo {      
   anyProperty : string      
   hello : number      
   getAll$pascalCase$ () : Object[]      
@@ -291,7 +291,7 @@ ccc generate repository 'car'
 
 \-   example 1 **component** file content  `./interface-car-repository.ts`
 ```typescript      
-interface ICarRepo = {      
+interface ICarRepo {      
   anyProperty : string      
   hello : number      
   getAllCar () : Object[]      
@@ -343,7 +343,7 @@ generated at `/my-project-2/src/infra/repos/my-bus-repository`
 \-   example 2 **component** file content  `./interface-bus-repository.ts`
 
 ```typescript      
-interface IBusRepo = {      
+interface IBusRepo {      
   anyProperty : string      
   hello : number      
   getAllBus () : Object[]      
@@ -400,7 +400,7 @@ As we can see, the  "`--subdomain`" command option allows to place a *subdomain*
 \-   example 3 **component** file content  `./interface-taxi-repository.ts`
 
   ```typescript      
-interface ITaxiRepo = {      
+interface ITaxiRepo {      
   anyProperty : string      
   hello : number      
   getAllTaxi () : Object[]      
