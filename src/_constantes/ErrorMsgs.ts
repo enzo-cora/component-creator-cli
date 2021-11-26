@@ -1,8 +1,8 @@
 import path from "path";
 import {cErr, cInfo, CLIAccess, cSuccess, cWarning, nameConfigDir, nameConfigFile} from "./config";
 import {CommandEnum} from "./CommandEnum";
-import chalk, {magenta} from "chalk";
-import {table} from "table";
+import chalk from "chalk";
+import Table from "cli-table";
 
 const provide_valid_stuff = (stuff) =>`Vous devez fournir ${chalk.underline(stuff)} dans le fichier de configuration "${cInfo(nameConfigFile)}" du composant`
 const unable_create_component = cErr("Impossible de créer votre composant")
@@ -21,8 +21,9 @@ ${err?.message ? err.message : err} \n ${contact_creator_unexpected_error}`,
   UNEXPECTRED_EXAMPLE_TEMPLATE_CREATION_ERR :   cInfo("OOPS ! Impossible de générer le template d'exemple !"),
 
   DUPLICATE_TEMPLATE_NAME  : (dupliName:string, paths:string[]) => {
-    const formatedPaths : [string][] = paths.map(path => [`${cWarning(path)}`])
-    return `Attention vous avez des templates ayant le même nom "${cErr(dupliName)}" \n${table(formatedPaths)}`
+    const table = new Table({colAligns : ['middle']})
+    paths.forEach(path => table.push( [`${cWarning(path)}`])  )
+    return `Attention vous avez des templates ayant le même nom "${cErr(dupliName)}" \n${table.toString()}`
   },
 
   CONFIG_DIR_MISS :
