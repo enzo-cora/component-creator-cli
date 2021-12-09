@@ -201,12 +201,14 @@ In this directory you will stored  all your templates like `my-extravagant-$none
 ### B- Template config file properties
 
 #### `./template-config.json`
+This  configuration file is **mandatory**.
 
 | Field | Type | Description |        
 |:---------------------------------------------------:|:--------------------:|:----------------------------------------------------------:|        
 | `template` | `string` |           **Required** & **Unique**. Template name.          |        
-|  [`"componentWorkDirectory"`](#componentworkdirectory-string--object)| `string` \| `object` | **Required**. Used to set the component working directory. Should be **relative** to project directory |      
-This  configuration file is **mandatory**.
+|  [`componentWorkDirectory`](#componentworkdirectory-string--object)| `string` \| `object` | **Required**. Used to set the component working directory. Should be **relative** to project directory |      
+
+
 
 ####  `"componentWorkDirectory"`: string | object
 As **string** :      
@@ -255,7 +257,7 @@ interface I$pascalCase$Repo {
 ### Example 1 : "Classic usage"
 
 
-\- example 1 **project** tree directory  `/my-project-1`
+\- **project** tree directory  `/my-project-1`
 ```    
 my-project-1/      
 ├─ ccc-config/       
@@ -266,7 +268,7 @@ my-project-1/
 └─ ...       
 ```    
 
-\-  example 1 'repository'  **template** config file  `./template-config.json`
+\- 'repository'  **template** config file  `./template-config.json`
 - define at `/my-project-1/ccc-config/my-$paramCase$-repository/template-config.json`
 ```json      
 {      
@@ -276,11 +278,11 @@ my-project-1/
 ```     
 
 
-\- example 1 **command** `generate`
+\- **command** `generate`
 ```cmd  
 ccc generate repository 'car'  
 ```  
-\- example 1 : **component** directory `my-car-repository/` generated at `/my-project-1/src/repos/my-car-repository`
+\- **component** directory `my-car-repository/` generated at `/my-project-1/src/repos/my-car-repository`
 ```               
 ./my-car-repository/  
 ├─ interface-car-repository.ts/    
@@ -289,7 +291,7 @@ ccc generate repository 'car'
 ```  
 
 
-\-   example 1 **component** file content  `./interface-car-repository.ts`
+\- **component** file content  `./interface-car-repository.ts`
 ```typescript      
 interface ICarRepo {      
   anyProperty : string      
@@ -302,7 +304,7 @@ interface ICarRepo {
 ### Example 2 : "Set directory extension in generate command"
 
 
-\- example 2 **project** tree directory  `/my-project-2`
+\- **project** tree directory  `/my-project-2`
 ```    
 my-project-2/      
 ├─ ccc-config/       
@@ -317,7 +319,7 @@ my-project-2/
 └─ ...       
 ```    
 
-\-  example 2 'repository'  **template** config file  `./template-config.json` define at `/my-project-2/ccc-config/my-$paramCase$-repository/template-config.json`
+\-  'repository'  **template** config file  `./template-config.json` define at `/my-project-2/ccc-config/my-$paramCase$-repository/template-config.json`
 ```json      
 {      
   "template" : "repository",      
@@ -326,11 +328,11 @@ my-project-2/
 ```     
 
 
-\- example 2 **command** `generate`
+\- **command** `generate`
 ```cmd  
 ccc generate repository 'bus' -s ./infra/repos  
 ```  
-\- example 2 : **component** directory `my-bus-repository/`  
+\- **component** directory `my-bus-repository/`  
 generated at `/my-project-2/src/infra/repos/my-bus-repository`
 ```  
 ./my-bus-repository/  
@@ -340,7 +342,7 @@ generated at `/my-project-2/src/infra/repos/my-bus-repository`
 ```  
 
 
-\-   example 2 **component** file content  `./interface-bus-repository.ts`
+\- **component** file content  `./interface-bus-repository.ts`
 
 ```typescript      
 interface IBusRepo {      
@@ -354,7 +356,7 @@ interface IBusRepo {
 ### Example 3 : "Use 'componentWorkDir' config property as object"
 
 
-\- example 3 **project** tree directory  `/my-project-3`
+\- **project** tree directory  `/my-project-3`
   ```    
 my-project-3/      
 ├─ ccc-config/       
@@ -372,7 +374,7 @@ my-project-3/
 └─ ...       
 ```    
 
-\-  example 3 'repository'  **template** config file  `./template-config.json`  
+\- 'repository'  **template** config file  `./template-config.json`  
 define at `/my-project-3/ccc-config/my-$paramCase$-repository/template-config.json`
   ```json      
 {      
@@ -383,11 +385,11 @@ define at `/my-project-3/ccc-config/my-$paramCase$-repository/template-config.js
    }     
 }    
 ```     
-\- example 3 **command** `generate`
+\- **command** `generate`
   ```cmd  
 ccc generate repository 'taxi' -s ./boundedCtx3  
 ```  
-\- example 3 : **component** directory `my-taxi-repository/`  
+\- **component** directory `my-taxi-repository/`  
 generated at  `/my-project-3/src/`**`boundedCtx3`**`/infra/repos/my-taxi-repository`
   ```  
 ./my-taxi-repository/  
@@ -397,7 +399,7 @@ generated at  `/my-project-3/src/`**`boundedCtx3`**`/infra/repos/my-taxi-reposit
 ```  
 As we can see, the  "`--subdomain`" command option allows to place a *subdomain* **between** the `rootWorkDir`and "`extensionWorkDir`" paths
 
-\-   example 3 **component** file content  `./interface-taxi-repository.ts`
+\- **component** file content  `./interface-taxi-repository.ts`
 
   ```typescript      
 interface ITaxiRepo {      
