@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {nameConfigFile} from "./_constantes/config";
+import {nameConfigFile, templateIdSeparator} from "./_constantes/config";
 import {readdir} from "fs/promises";
 import {ITemplateFileInfo, ITemplateReader} from "./_definitions/ITemplateReader";
 import {ErrorMsgs} from "./_constantes/ErrorMsgs";
@@ -26,6 +26,16 @@ export class TemplateReader implements ITemplateReader{
     }
   }
 
+  static checkTemplateDirName(tempDirPath:string) : void | Error {
+    const tempDirName = path.basename(tempDirPath)
+    const index = tempDirName.indexOf(templateIdSeparator)
+    if(index !== -1){
+      if(index === 0)
+        return new Error(ErrorMsgs.BAD_POSITION_TEMPLATE_ID(tempDirName))
+      else if(tempDirName.slice(index,-1).length < 2)
+        return new Error(ErrorMsgs.INVALID_TEMPLATE_ID(tempDirName))
+    }
+  }
 
   static checkConfigFileProperties(configFile:ITemplateConfigFile) : void | Error {
 

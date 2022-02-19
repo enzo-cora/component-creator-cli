@@ -174,10 +174,10 @@ The value contained in generic keyword defines formatting result of `replacement
 
 ## V- Template structure
 ###  A- Template directory structure
-#### `ccc-config/`
+#### Global structure `.ccc-templates/`
 ```      
 my-project-directory/      
-├─ ccc-config/                   ---> CLI config directory      
+├─ .ccc-templates/                   ---> CLI config directory      
 │  │                
 │  ├─ my-extravagant-$none$/         ---> A custom template      
 │  │  ├─ template-config.json        ---> Component config file      
@@ -192,13 +192,38 @@ my-project-directory/
 │  │       
 └─ ...      
 ```      
-The `ccc-config/`**CLI configuration directory is mandatory** and it must be created at the root of your project.      
+The `.ccc-templates/`**CLI configuration directory is mandatory** and it must be created at the root of your project.      
 In this directory you will stored  all your templates like `my-extravagant-$none$` and `other$camelCase$Entity/`.
 
 - The keywords "`[none]`" and  "`[camelCase]`"  belongs to a family of [generics keywords](#iv--generics-keywords) .
 - On running `generate` command  : Every `generic keywords` **will be replaced** by the [replacement value](#arguments--generate)
 
+#### Give template directory ID
+
+
 ### B- Template config file properties
+
+When you need to create multiple templates that share the same directory name, you can provide IDs to the directories to differentiate between them.
+Note :
+- IDs will not be used for component creation
+- ID is an optional feature
+
+To define an id you must use a `@` **AFTER the root** of your template : `./template_dir_name@TEMPLATE_DIR_ID`
+
+Examples :
+
+```      
+.ccc-templates/      
+│  
+├─ $camelCase$@entity    
+│                
+├─ $camelCase$@entity-v2 
+│                
+├─ $camelCase$@aggregate                         
+│    
+└─ ...      
+```  
+
 
 #### `./template-config.json`
 This  configuration file is **mandatory**.
@@ -225,7 +250,7 @@ As **object** :
 | `componentWorkDir` .`extensionWorkDir` | `string` | **Optional**. Exention of component working directory. Should be relative to `rootWorkDir`  |      
 
 
-Use the "`componentWorkDir`" property as **object** when working with subdomains and want to create your components in different subdomains [like ewample 3](#example-3--use-componentworkdir-config-property-as-object) with  "`--subdomain`" option.
+Use the "`componentWorkDir`" property as **object** when working with subdomains and want to create your components in different subdomains [like example 3](#example-3--use-componentworkdir-config-property-as-object) with  "`--subdomain`" option.
 
 # Examples
 - In all the examples we will create a component from this '*repository*' template
@@ -237,7 +262,7 @@ Use the "`componentWorkDir`" property as **object** when working with subdomains
 
 Same 'repository' ***template** directory* `my-$paramCase$-repository/`
 ```    
-./ccc-config/      
+./.ccc-templates/      
 ├─ my-$paramCase$-repository/       
 │  ├─ template-config.json         
 │  ├─ interface-$paramCase$-repository.ts               
@@ -260,7 +285,7 @@ interface I$pascalCase$Repo {
 \- **project** tree directory  `/my-project-1`
 ```    
 my-project-1/      
-├─ ccc-config/       
+├─ .ccc-templates/       
 ├─ src/                
 │  ├─ repos/      
 ├─ node_modules/      
@@ -269,7 +294,7 @@ my-project-1/
 ```    
 
 \- 'repository'  **template** config file  `./template-config.json`
-- define at `/my-project-1/ccc-config/my-$paramCase$-repository/template-config.json`
+- define at `/my-project-1/.ccc-templates/my-$paramCase$-repository/template-config.json`
 ```json      
 {      
   "template" : "repository",      
@@ -307,7 +332,7 @@ interface ICarRepo {
 \- **project** tree directory  `/my-project-2`
 ```    
 my-project-2/      
-├─ ccc-config/       
+├─ .ccc-templates/       
 ├─ src/  
 │  ├─ domain/   
 │  ├─ infra/      
@@ -319,7 +344,7 @@ my-project-2/
 └─ ...       
 ```    
 
-\-  'repository'  **template** config file  `./template-config.json` define at `/my-project-2/ccc-config/my-$paramCase$-repository/template-config.json`
+\-  'repository'  **template** config file  `./template-config.json` define at `/my-project-2/.ccc-templates/my-$paramCase$-repository/template-config.json`
 ```json      
 {      
   "template" : "repository",      
@@ -359,7 +384,7 @@ interface IBusRepo {
 \- **project** tree directory  `/my-project-3`
   ```    
 my-project-3/      
-├─ ccc-config/       
+├─ .ccc-templates/       
 ├─ src/  
 │  ├─ boundedCtx1/   
 │  ├─ boundedCtx2/   
@@ -375,7 +400,7 @@ my-project-3/
 ```    
 
 \- 'repository'  **template** config file  `./template-config.json`  
-define at `/my-project-3/ccc-config/my-$paramCase$-repository/template-config.json`
+define at `/my-project-3/.ccc-templates/my-$paramCase$-repository/template-config.json`
   ```json      
 {      
   "template" : "repository",      

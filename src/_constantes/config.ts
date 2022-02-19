@@ -7,7 +7,8 @@ export const keywordExemple = `${edging}${NamingConvention.none}${edging}`
 
 export const CLIAccess : string = "ccc"
 
-export const nameConfigDir :string = "ccc-config"
+export const nameConfigDir :string = ".ccc-templates"
+export const templateIdSeparator :string = "@"
 export const nameConfigFile:string = "template-config.json"
 
 

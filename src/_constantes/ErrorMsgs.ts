@@ -35,6 +35,10 @@ ${err?.message ? err.message : err} \n ${contact_creator_unexpected_error}`,
 
   CONFIG_FIlE_MISS : (tempName)=>`${cWarning("Fichier de configuration manquant")} : Vous devez ajouter le fichier de configuration ${cInfo.underline(nameConfigFile)} au template "${cWarning(tempName)}"`,
 
+  INVALID_TEMPLATE_ID: (tempName)=>`${cErr(`Template ${chalk.blue.bold.underline(tempName)} invalide :`)} L'${cInfo("ID")} du template doit contenir aumoins 1 caractère`,
+  BAD_POSITION_TEMPLATE_ID: (tempName)=>`${cErr(`Template ${chalk.blue.bold.underline(tempName)} invalide :`)} L'${cInfo("ID")} du template ne peut pas être placé à la position ${cErr(0)} !
+  Ex: ${cSuccess(`TemplateName${chalk.bold("@TemplateId")}`)}`,
+
   PROJECT_PATH_INVALID_VALUE: (errPath)=>`${cWarning("Propriété invalide dans le fichier config du template:")} Le chemin '${cWarning(errPath)}'  de la pté ${cInfo("componentWorkDir")} est incorrect car vous avez fourni ${cErr("un chemin absolut")} 
   Vous devez fournir un chemin ${chalk.underline("relatif")} à ${cInfo("la racine de votre projet")}`,
 

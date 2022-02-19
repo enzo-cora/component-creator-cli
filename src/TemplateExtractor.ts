@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import {
-  edging, nameConfigDir,
+  edging, nameConfigDir, templateIdSeparator,
 } from "./_constantes/config";
 
 import path from "path";
@@ -49,10 +49,16 @@ export class TemplateExtractor implements ITemplateExtractor{
 
 
   getComponentDirName() : string {
-    const templateDirName = this.templateReader.templateDirName
+    let templateDirName = this.templateReader.templateDirName
     const convention : NamingConvention | null = this._getConvention(templateDirName)
 
     let formatedReplaceValue = this.replaceVal
+
+    if(templateDirName.includes(templateIdSeparator)){
+      const index = templateDirName.indexOf(templateIdSeparator)
+      templateDirName = templateDirName.slice(0,index)
+    }
+
 
     if(!convention)
       return templateDirName

@@ -20,6 +20,10 @@ type IExampleTemplate = {
 export class Initializer implements IInitializer {
 
   private static _initTemplate(tempDirPath : string) : Error | string {
+    const dirNameResult = TemplateReader.checkTemplateDirName(tempDirPath)
+    if(dirNameResult instanceof Error)
+      return dirNameResult
+
     const configFileResult = TemplateReader.getTemplateConfigFile(tempDirPath)
     if(configFileResult instanceof Error)
       return configFileResult
