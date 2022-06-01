@@ -1,6 +1,6 @@
 {
   "name": "component-creator-cli",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Define and generate automatically your own custom component from CLI (like the angular CLI)",
   "scripts": {
     "build": "./node_modules/.bin/tsc -p tsconfig.json",
