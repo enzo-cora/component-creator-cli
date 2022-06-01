@@ -1,24 +1,6 @@
+# PRESENTATION
 
-
-
-# Installation
-### Run CLI command from eveywhere
-Install `component-creator-cli` as **global dependency**
-```bash      
-  npm i -g component-creator-cli      
-```      
-- For run any command use :  **`$ ccc`** keyword
-
-### Run CLI command from your project
-Install `component-creator-cli` as **dev-dependency**
-```bash      
-  npm i -D component-creator-cli      
-```      
-- For run any command use :  **`$ ngx ccc`** keyword
-
-
-
-# Component creator CLI
+## Why ?
 
 [![NPM Version](http://img.shields.io/npm/v/component-creator-cli.svg)](https://www.npmjs.org/package/component-creator-cli)      
 [![NPM Downloads](https://img.shields.io/npm/dm/component-creator-cli.svg)](https://npmcharts.com/compare/component-creator-cli?minimal=true)      
@@ -36,96 +18,97 @@ Therefore, in order to save time on the creation of your architecture and improv
 2- And run the CLI `generate` command to generate your component at the chosen locations.** (It's like the Angular CLI, with your own custom components !)
 
 
-## I- CLI Features
+## CLI features :
 
-| #                                                        | Meaning         |      
-|----------------------------------------------------------|-----------------|      
-| ![#0a192f](https://via.placeholder.com/10/00A000?text=+) | Implemented     |      
-| ![#f8f8f8](https://via.placeholder.com/10/e71837?text=+) | Not yet Implemented |      
-
-
-- ![green](https://via.placeholder.com/10/00A000?text=+) `Create your custom template`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Define the files created by the template`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Define the files content`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Place the generic replacement keyword`
-    - ![green](https://via.placeholder.com/10/00A000?text=+)`Choose the formatting convention for your generic keyword`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Configure component work directory target`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Configure component work directory extension`
-- ![green](https://via.placeholder.com/10/00A000?text=+) `Generate your own custom component`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Automatically Replace generic keyword`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Automatically Formate generic keyword`
-    - ![green](https://via.placeholder.com/10/00A000?text=+) `Automatically Handle import path`
-- ![red](https://via.placeholder.com/10/e71837?text=+) `Delete created component`
-- ![green](https://via.placeholder.com/10/00A000?text=+) `List all template available`
-- ![green](https://via.placeholder.com/10/00A000?text=+) `Generate an example template`
+| #                                              | Meaning         |      
+|------------------------------------------------|-----------------|      
+| :heavy_check_mark: | Implemented     |      
+| :soon: | Not yet Implemented |      
 
 
-## II- CLI Demo
+- :heavy_check_mark: `Create your custom template`
+  - :heavy_check_mark: `Define the files created by the template`
+  - :heavy_check_mark: `Define the files content`
+  - :heavy_check_mark: `Place the generic replacement keyword`
+  - :heavy_check_mark:`Choose the formatting convention for your generic keyword`
+  - :heavy_check_mark: `Configure component work directory target`
+  - :heavy_check_mark: `Configure component work directory extension`
+- :heavy_check_mark: `Generate your own custom component`
+  - :heavy_check_mark: `Automatically Replace generic keyword`
+  - :heavy_check_mark: `Automatically Formate generic keyword`
+  - :heavy_check_mark: `Automatically Handle import path`
+- :soon: `Delete created component`
+- :heavy_check_mark: `List all template available`
+- :heavy_check_mark: `Generate an example template`
+
+
+
+## CLI demonstration
 
 Gif incomming      
 ![Demo animation cli](https://github.com/enzo-cora/component-creator-cli/blob/images/create-component.png?raw=true)
 
-### A- Create component
-These 3 commands are the same :
-```cmd      
-   $ ccc generate extravagant order      
-   $ ccc g extravagant user      
-   $ ngx ccc generate smartphone      
+
+# INSTALLATION
+
+## Global
+
+Run CLI command from eveywhere
+Install `component-creator-cli` as **global dependency**
+```bash      
+  npm i -g component-creator-cli      
 ```      
+- For run any command use :  **`ccc`** keyword
 
-These commands will generate three components based on a custom "extravagant" template.        
-The creation location is configured upstream (in the [template config file](#b--template-config-file-properties) ).        
-Here are the generated components :
+## Local
+
+Run CLI command from your project
+Install `component-creator-cli` as **dev-dependency**
+```bash      
+  npm i -D component-creator-cli      
 ```      
-FancifulEntities/      
-├─ my-extravagant-order/      
-│  ├─ interfce-order.ts                
-│  ├─ show-order-formated.html      
-│  ├─ order-beauty.css      
-│  ├─ test-my-order-please.test.ts      
-│  └─ order.js      
-│        
-├─ my-extravagant-user/      
-│  ├─ interfce-user.ts                
-│  ├─ show-user-formated.html      
-│  ├─ user-beauty.css      
-│  ├─ test-my-user-please.test.ts      
-│  └─ user.js      
-│        
-├─ my-extravagant-smartphone/      
-│  ├─ interfce-smartphone.ts                
-│  ├─ show-smartphone-formated.html      
-│  ├─ smartphone-beauty.css      
-│  ├─ test-my-smartphone-please.test.ts      
-│  └─ smartphone.js      
-      
-```      
-See [more examples there](#examples)
+- For run any command use :  **`npx ccc`** keyword
 
-## III- CLI Reference
 
-**Definitions**:
-- **Template** : A template is a way of writing an entity with some information “left generic”, for the CLI to fill in later, when we actually use it.
-- **Component** :  A component is built version of a template
 
-### A- Init CLI
+# GUIDE
+
+Definitions:
+- **Template** : A template is a way of writing an directory with some information “left to fill”
+  - files name 
+  - files content
+  - location
+
+  (This missing informations will be provided through the CLI during component building. Generally, one template is used for build multiple components.)
+
+
+- **Component** : A component is fulfilled version of a template. A component is builded from a template.
+
+
+## CLI commands
+
+### - Init CLI
 
 ```cmd      
-  $ ccc init      
+  ccc init      
 ```      
 This command initializes the CLI :
-- If this is the first use : it create config dir and an example template. 
+- If this is the first use : it create config dir and an example template.
 - Otherwise, it checks the validity of existing templates and updates the cache.
 
-### B- Create component
+### - Create component
+
+Use `generate` keywork  (alias `g`)
 
 ```cmd      
-  $ ccc generate <template-name> <replacement-value> [options]      
+  ccc generate <template-name> <replacement-value> [options]      
 ```      
 ```cmd      
-  $ ccc generate <template-name> <replacement-value> [options]      
+  ccc g <template-name> <replacement-value> [options]      
 ```
-This command will generate component based on [template](#v--template-structure).
+
+This command will generate component based on [template](#v--template-structure). 
+The creation location is configured upstream (in the [template config file](#b--template-config-file-properties) )
 
 #### Arguments : `generate`
 |      Argument     |  Type  |                                    Description                                   |      
@@ -139,24 +122,27 @@ This command will generate component based on [template](#v--template-structure)
 |:-----------:|:-----:|:------:|:--------------------------------------------------------------------------------:|:-------------:|      
 | `--subdomain` |   `-s` | `string` | **Optional**. Path of subdomain. It should be relative to `componentWorkDir` or `rootWorkDir`. The subdomain will be placed between the `componentWorkDir` and `rootWorkDir` |      none     |      
 
-### C- List all templates
+### - List all templates
 
 ```cmd      
-  $ ccc list      
+  ccc list      
 ```      
 This command lists all available templates
 
-### D- Display help interface
+### - Help
 
 ```cmd      
-  $ ccc --help      
+  ccc --help      
 ```      
 This command displays a command line help interface
 
-## IV- Generics keywords
-The genereric keywords are recognized by the CLI and replaced by the [reclacement value](#arguments--generate) provided.
+## Generics keywords
+The genereric keywords are 
+- used in templates 
+- recognized by the CLI 
+- and replaced by the [reclacement value](#arguments--generate) provided in CLI command.
 
-The value contained in generic keyword defines formatting result of `replacement value` argument :
+The value contained in generic keyword defines the formatting result of the `replacement value`
 
 
 |      Keyword     |                      Formatting                     |    Exemple   |      
@@ -172,9 +158,9 @@ The value contained in generic keyword defines formatting result of `replacement
 
 
 
-## V- Template structure
-###  A- Template directory structure
-#### Global structure `.ccc-templates/`
+## Template structure
+
+### Global structure `.ccc-templates/`
 ```      
 my-project-directory/      
 ├─ .ccc-templates/                   ---> CLI config directory      
@@ -198,17 +184,17 @@ In this directory you will stored  all your templates like `my-extravagant-$none
 - The keywords "`[none]`" and  "`[camelCase]`"  belongs to a family of [generics keywords](#iv--generics-keywords) .
 - On running `generate` command  : Every `generic keywords` **will be replaced** by the [replacement value](#arguments--generate)
 
-#### Give template directory ID
-
-
-### B- Template config file properties
+### Give template directory ID
 
 When you need to create multiple templates that share the same directory name, you can provide IDs to the directories to differentiate between them.
+Additionally, when using community templates, a random ID may be added to each template's directory to avoid name conflicts.
+(This ID will not be transmited to components)
+
 Note :
 - IDs will not be used for component creation
 - ID is an optional feature
 
-To define an id you must use a `@` **AFTER the root** of your template : `./template_dir_name@TEMPLATE_DIR_ID`
+To define an id you must add `@` **AFTER the root** of your template : `./template_dir_name@TEMPLATE_DIR_ID`
 
 Examples :
 
@@ -224,9 +210,9 @@ Examples :
 └─ ...      
 ```  
 
+### Template config file
 
-#### `./template-config.json`
-This  configuration file is **mandatory**.
+The  `./template-config.json` configuration file is **mandatory**.
 
 | Field | Type | Description |        
 |:---------------------------------------------------:|:--------------------:|:----------------------------------------------------------:|        
@@ -251,6 +237,7 @@ As **object** :
 
 
 Use the "`componentWorkDir`" property as **object** when working with subdomains and want to create your components in different subdomains [like example 3](#example-3--use-componentworkdir-config-property-as-object) with  "`--subdomain`" option.
+
 
 # Examples
 - In all the examples we will create a component from this '*repository*' template
@@ -279,7 +266,7 @@ interface I$pascalCase$Repo {
   getOne$pascalCase$ () : Object      
 }    
 ```      
-### Example 1 : "Classic usage"
+## Example 1 : Classic usage
 
 
 \- **project** tree directory  `/my-project-1`
@@ -326,7 +313,7 @@ interface ICarRepo {
 }    
 ```      
 
-### Example 2 : "Set directory extension in generate command"
+## Example 2 : Set directory extension in "generate" command
 
 
 \- **project** tree directory  `/my-project-2`
@@ -378,7 +365,7 @@ interface IBusRepo {
 }    
 ```  
 
-### Example 3 : "Use 'componentWorkDir' config property as object"
+## Example 3 : Use "componentWorkDir" config property as object
 
 
 \- **project** tree directory  `/my-project-3`
@@ -436,8 +423,17 @@ interface ITaxiRepo {
 ```  
 
 
+# More
+
+## Technichal information 
+
+- This CLI contain `javascrit caching system database` for speeds up reads operations:
+  - We avoid multitudes of iterations through all the templates in order to recover a single one.
+  - We avoid script operations for reading the configuration files of each template
+  - Verification operations are accelerated.
+
 # License & Author
 
-##### Lience : [MIT](https://choosealicense.com/licenses/mit/)
+#### Lience : [MIT](https://choosealicense.com/licenses/mit/)
 
-##### Author : [@enzo-cora](https://www.github.com/enzo-cora)
+#### Author : [@enzo-cora](https://www.github.com/enzo-cora)
