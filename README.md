@@ -107,14 +107,15 @@ Use `generate` keywork  (alias `g`)
   ccc g <template-name> <replacement-value> [options]      
 ```
 
-This command will generate component based on [template](#v--template-structure). 
-The creation location is configured upstream (in the [template config file](#b--template-config-file-properties) )
+This command will generate component based on [template](#template-structure). 
+
+The creation location is configured upstream (in the [template config file](#template-config-file) )
 
 #### Arguments : `generate`
-|      Argument     |  Type  |                                    Description                                   |      
-|:-----------------:|:------:|:--------------------------------------------------------------------------------:|      
-|   `<template-name>` | `string` |                            **Required**. Name of template to use.                           |      
-| `<replacement-value>` | `string` | **Required**. Replacement value used to replace the [generic keyword](#iv--generics-keywords) in brackets |      
+|      Argument     |  Type  |                                              Description                                              |      
+|:-----------------:|:------:|:-----------------------------------------------------------------------------------------------------:|      
+|   `<template-name>` | `string` |                                **Required**. Name of template to use.                                 |      
+| `<replacement-value>` | `string` | **Required**. Replacement value used to replace the [generic keyword](#generics-keywords) in brackets |      
 
 
 #### Options : `generate`
@@ -181,7 +182,7 @@ my-project-directory/
 The `.ccc-templates/`**CLI configuration directory is mandatory** and it must be created at the root of your project.      
 In this directory you will stored  all your templates like `my-extravagant-$none$` and `other$camelCase$Entity/`.
 
-- The keywords "`[none]`" and  "`[camelCase]`"  belongs to a family of [generics keywords](#iv--generics-keywords) .
+- The keywords "`[none]`" and  "`[camelCase]`"  belongs to a family of [generics keywords](#generics-keywords) .
 - On running `generate` command  : Every `generic keywords` **will be replaced** by the [replacement value](#arguments--generate)
 
 ### Give template directory ID
